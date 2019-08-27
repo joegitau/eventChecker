@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const Joi = require("@hapi/joi");
 const express = require("express");
 const router = express.Router();
@@ -41,6 +42,8 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findByCredentials(email, password);
     const token = await user.generateAuthToken();
+
+    // res.status(200).send({ user: _.pick(user, ["name", "email", "phone", "address", "company"]), token});
     res.status(200).send({ user, token });
   } catch (err) {
     res.status(400).send("Cannot login in User");

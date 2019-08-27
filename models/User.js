@@ -73,6 +73,16 @@ userSchema.methods.generateAuthToken = async function() {
   return token;
 };
 
+// hide private data
+userSchema.methods.toJSON = function() {
+  const userObj = this.toObject();
+
+  delete userObj.password;
+  delete userObj.tokens;
+
+  return userObj;
+};
+
 // Virtual realtionship with Events
 userSchema.virtual("events", {
   ref: "Event",
