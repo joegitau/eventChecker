@@ -14,7 +14,8 @@ app.use("/events", events);
 mongoose
   .connect("mongodb://localhost/events", {
     useNewUrlParser: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false
   })
   .then(() => console.log("Connected to MongoDB..."))
   .catch(err => console.error("Could not connect to MongoDB..."));

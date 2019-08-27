@@ -50,9 +50,33 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// profile
 router.get("/me", auth, async (req, res) => {
   res.status(200).send(req.user);
+});
+
+router.put("/me", auth, async (req, res) => {
+  const schema = {
+    name: Joi.string(),
+    email: Joi.string().email(),
+    password: Joi.string().min(4),
+    phone: Joi.string()
+      .min(7)
+      .max(15),
+    address: Joi.string(),
+    company: Joi.string()
+  };
+  const { error } = Joi.validate(req.body, schema);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  try {
+    const user = await User.findOneAndUpdate({ _id: req.user._id }, req.body, {
+      new: true
+    });
+    await user.save();
+    res.status(201).send(user);
+  } catch (err) {
+    res.status(400).send("Cannot update User");
+  }
 });
 
 router.post("/logout", auth, async (req, res) => {
@@ -72,6 +96,15 @@ router.post("/logoutAll", auth, async (req, res) => {
     res.status(200).send("Successfully logged out from all devices");
   } catch (err) {
     res.status(400).send("Cannot logout User");
+  }
+});
+
+router.delete("/me", auth, async (req, res) => {
+  try {
+    await req.user.remove();
+    res.status(200).send(req.user);
+  } catch (err) {
+    res.status(400).send("Cannot delete User");
   }
 });
 
