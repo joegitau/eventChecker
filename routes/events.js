@@ -41,8 +41,10 @@ router.post("/", auth, async (req, res) => {
 router.get("/", auth, async (req, res) => {
   try {
     // const events = await Event.find({ creator: req.user._id });
-    const events = req.user.ev;
-    res.status(200).send(events);
+    // res.status(200).send(events);
+
+    await req.user.populate("events").execPopulate();
+    res.status(200).send(req.user.events);
   } catch (err) {
     res.status(400).send("Events not found");
   }
@@ -58,7 +60,21 @@ router.get("/:id", auth, async (req, res) => {
     if (!event) return res.status(400).send("Event with given ID not found");
     res.status(200).send(event);
   } catch (err) {
-    res.status(400).send("Event with given ID not found");
+    res.status(400).send("Event not found");
+  }
+});
+
+// delete event
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    const event = await Event.findOneAndRemove({
+      _id: req.params.id,
+      creator: req.user._id
+    });
+    if (!event) return res.status(400).send("Event with given ID not found");
+    res.status(200).send(event);
+  } catch (err) {
+    res.status(400).send("Event not deleted");
   }
 });
 
