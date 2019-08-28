@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 
+const Event = require("../models/Event");
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -91,7 +93,11 @@ userSchema.virtual("events", {
 });
 
 // delete user's events once profile is deleted
-userSchema.pre("remove", async function(next) {});
+userSchema.pre("remove", async function(next) {
+  await Task.deleteMany({ creator: this._id });
+
+  next();
+});
 
 const User = mongoose.model("User", userSchema);
 

@@ -43,7 +43,13 @@ router.get("/", auth, async (req, res) => {
     // const events = await Event.find({ creator: req.user._id });
     // res.status(200).send(events);
 
-    await req.user.populate("events").execPopulate();
+    await req.user
+      .populate({
+        path: "events",
+        options: { sort: { createdAt: -1 } }
+      })
+      .execPopulate();
+
     res.status(200).send(req.user.events);
   } catch (err) {
     res.status(400).send("Events not found");
@@ -61,6 +67,31 @@ router.get("/:id", auth, async (req, res) => {
     res.status(200).send(event);
   } catch (err) {
     res.status(400).send("Event not found");
+  }
+});
+
+// update event
+router.put("/", auth, async (req, res) => {
+  const schema = {
+    title: Joi.string(),
+    venue: Joi.string(),
+    eventDate: Joi.date().format("YYYY-MM-DD"),
+    eventTime: Joi.string(),
+    duration: Joi.number(),
+    description: Joi.string()
+  };
+
+  const { error } = Joi.validate(req.body, schema);
+  if (error) return res.status(400).send(error.details[0].message);
+  try {
+    const event = await Event.findOneAndUpdate(
+      { _id: req.params.id, creator: req.user._id },
+      req.body,
+      { new: true }
+    );
+    res.status(200).send(event);
+  } catch (err) {
+    res.status(400).send("Event not updated");
   }
 });
 
