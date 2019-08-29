@@ -33,6 +33,13 @@ const eventSchema = new mongoose.Schema({
   }
 });
 
+// virtual relation with guest
+// eventSchema.virtual("guests", {
+//   ref: "Guest",
+//   localField: "_id",
+//   foreignField: "eventId"
+// });
+
 const Event = mongoose.model("Event", eventSchema);
 
 module.exports = Event;

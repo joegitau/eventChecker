@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Event = require("../models/Event");
 
 async function auth(req, res, next) {
   try {
@@ -12,6 +13,9 @@ async function auth(req, res, next) {
     }); // finds _id from decoded payload
     if (!user) throw new Error();
 
+    const event = await Event.findOne({ creator: user._id });
+
+    req.event = event;
     req.token = token;
     req.user = user;
 
