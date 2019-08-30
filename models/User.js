@@ -4,43 +4,48 @@ const mongoose = require("mongoose");
 
 const Event = require("../models/Event");
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  phone: {
-    type: String,
-    required: true,
-    minlength: 7,
-    maxlength: 15
-  },
-  address: String,
-  company: String,
-  isAdmin: {
-    type: Boolean,
-    default: false
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true
+    },
+    password: {
+      type: String,
+      required: true
+    },
+    phone: {
+      type: String,
+      required: true,
+      minlength: 7,
+      maxlength: 15
+    },
+    address: String,
+    company: String,
+    isAdmin: {
+      type: Boolean,
+      default: false
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true
+        }
       }
-    }
-  ]
-});
+    ]
+  },
+  {
+    timestamps: true
+  }
+);
 
 // hash password
 userSchema.pre("save", async function(next) {

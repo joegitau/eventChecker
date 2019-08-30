@@ -19,7 +19,8 @@ router.post("/register", async (req, res) => {
       .min(7)
       .max(15),
     address: Joi.string(),
-    company: Joi.string()
+    company: Joi.string(),
+    isAdmin: Joi.boolean()
   };
   const { error } = Joi.validate(req.body, schema);
   if (error) return res.status(400).send(error.details[0].message);
