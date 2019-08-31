@@ -70,7 +70,17 @@ router.get("/", auth, async (req, res) => {
     match.isArrived = req.query.isArrived === "true";
   }
   try {
-    await req.event.populate({ path: "guests", match }).execPopulate();
+    await req.event
+      .populate({
+        path: "guests",
+        match,
+        options: {
+          limit: parseInt(req.query.limit),
+          limit: parseInt(req.query.skip),
+          sort: { name: 1 }
+        }
+      })
+      .execPopulate();
     res.send(req.event.guests);
   } catch (err) {
     res.status(401).send("Guests not found");

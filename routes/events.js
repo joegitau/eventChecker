@@ -1,3 +1,4 @@
+const multer = require("multer");
 const BaseJoi = require("@hapi/joi");
 const Extension = require("@hapi/joi-date");
 const Joi = BaseJoi.extend(Extension);
@@ -69,6 +70,36 @@ router.get("/:id", auth, async (req, res) => {
     res.status(400).send("Event not found");
   }
 });
+
+// cover image
+const coverImg = multer({
+  options: {
+    limits: 2000000
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png|pdf)/))
+      cb(new Error("File type must either be: JPG, JPEG, PNG or PDF"));
+
+    cb(undefined, true);
+  }
+});
+router.post(
+  "/:id/coverImg",
+  auth,
+  coverImg.single("coverImg"),
+  async (req, res) => {
+    try {
+      req.event.coverImg = req.file.buffer;
+      await req.event.save();
+      res.status(201).send();
+    } catch (err) {
+      res.status(400).send(err.message);
+    }
+  },
+  (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
+  }
+);
 
 // update event
 router.put("/", auth, async (req, res) => {

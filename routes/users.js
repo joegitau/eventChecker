@@ -1,3 +1,4 @@
+const multer = require("multer");
 const _ = require("lodash");
 const Joi = require("@hapi/joi");
 const express = require("express");
@@ -5,7 +6,7 @@ const router = express.Router();
 
 const auth = require("../middleware/auth");
 const User = require("../models/User");
-
+// register
 router.post("/register", async (req, res) => {
   const schema = {
     name: Joi.string().required(),
@@ -38,6 +39,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
+// login
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -51,10 +53,43 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/me", auth, async (req, res) => {
+// current user
+router.get("/me", auth, (req, res) => {
   res.status(200).send(req.user);
 });
 
+// upload avatars
+const upload = multer({
+  limits: {
+    fileSize: 1000000
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/))
+      cb(new Error("Image must be either be of type: JPG, JPEG, or PNG"));
+
+    cb(undefined, true);
+  }
+});
+
+router.post(
+  "/me/avatar",
+  auth,
+  upload.single("avatar"),
+  async (req, res) => {
+    try {
+      req.user.avatar = req.file.buffer;
+      await req.user.save();
+      res.status(201).send();
+    } catch (err) {
+      res.status(401).send({ error: err.message });
+    }
+  },
+  (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
+  }
+);
+
+// update
 router.put("/me", auth, async (req, res) => {
   const schema = {
     name: Joi.string(),
@@ -80,6 +115,7 @@ router.put("/me", auth, async (req, res) => {
   }
 });
 
+// logout
 router.post("/logout", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter(t => t.token !== req.token);
@@ -90,6 +126,7 @@ router.post("/logout", auth, async (req, res) => {
   }
 });
 
+// logout from all sessions
 router.post("/logoutAll", auth, async (req, res) => {
   try {
     req.user.tokens = [];
@@ -100,6 +137,7 @@ router.post("/logoutAll", auth, async (req, res) => {
   }
 });
 
+// delete profile
 router.delete("/me", auth, async (req, res) => {
   try {
     await req.user.remove();
