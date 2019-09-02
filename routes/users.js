@@ -1,3 +1,4 @@
+const sharp = require("sharp");
 const multer = require("multer");
 const _ = require("lodash");
 const Joi = require("@hapi/joi");
@@ -78,9 +79,13 @@ router.post(
   upload.single("avatar"),
   async (req, res) => {
     try {
-      req.user.avatar = req.file.buffer;
+      const buffer = await sharp(req.file.buffer)
+        .png()
+        .resize({ width: 200, height: 200 })
+        .toBuffer();
+      req.user.avatar = buffer;
       await req.user.save();
-      res.status(201).send();
+      res.status(201).send({ success: "Avatar created/ updated" });
     } catch (err) {
       res.status(401).send({ error: err.message });
     }
@@ -98,8 +103,8 @@ router.get(
       const user = await User.findById(req.params.id);
       if (!user || !user.avatar) throw new Error();
 
-      res.set("Content-Type", "image/jpg");
-      res.send();
+      res.set("Content-Type", "image/png");
+      res.send(user.avatar);
     } catch (err) {
       res.status(400).send({ error: error.message });
     }
@@ -112,9 +117,10 @@ router.get(
 router.delete("/me/avatar", auth, async (req, res) => {
   try {
     req.user.avatar = undefined;
+    await req.user.save();
     res.status(200).send({ success: "Avatar successfully removed" });
   } catch (err) {
-    res.status(400).send({ error: error.message });
+    res.status(400).send({ error: err.message });
   }
 });
 
