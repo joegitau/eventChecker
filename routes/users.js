@@ -7,6 +7,8 @@ const router = express.Router();
 
 const auth = require("../middleware/auth");
 const User = require("../models/User");
+const { sendWelcomeEmail, sendDeleteEmail } = require("../emails/account");
+
 // register
 router.post("/register", async (req, res) => {
   const schema = {
@@ -33,10 +35,13 @@ router.post("/register", async (req, res) => {
 
     user = new User(req.body);
     await user.save();
+
+    sendWelcomeEmail(user.email, user.name);
+
     const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
   } catch (err) {
-    res.status(400).send("User not Registered");
+    res.status(401).send({ error: err.message });
   }
 });
 
@@ -176,9 +181,12 @@ router.post("/logoutAll", auth, async (req, res) => {
 router.delete("/me", auth, async (req, res) => {
   try {
     await req.user.remove();
+
+    sendDeleteEmail(req.user.email, req.user.name);
+
     res.status(200).send(req.user);
   } catch (err) {
-    res.status(400).send("Cannot delete User");
+    res.status(400).send({ error: err.message });
   }
 });
 

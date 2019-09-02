@@ -72,7 +72,7 @@ userSchema.statics.findByCredentials = async function(email, password) {
 userSchema.methods.generateAuthToken = async function() {
   const token = jwt.sign(
     { _id: this._id.toString(), isAdmin: this.isAdmin.toString() },
-    "jwtPrivateKey"
+    process.env.JWT_PRIVATE_KEY
   );
 
   this.tokens = this.tokens.concat({ token });
@@ -101,7 +101,7 @@ userSchema.virtual("events", {
 
 // delete user's events once profile is deleted
 userSchema.pre("remove", async function(next) {
-  await Task.deleteMany({ creator: this._id });
+  await Event.deleteMany({ creator: this._id });
 
   next();
 });

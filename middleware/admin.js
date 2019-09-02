@@ -4,7 +4,7 @@ const User = require("../models/User");
 async function admin(req, res, next) {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
-    const decoded = await jwt.verify(token, "jwtPrivateKey");
+    const decoded = await jwt.verify(token, process.env.JWT_PRIVATE_KEY);
 
     const user = await User.findOne({
       _id: decoded._id,
