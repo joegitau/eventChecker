@@ -94,7 +94,7 @@ router.post(
     try {
       const buffer = await sharp(req.file.buffer)
         .png()
-        .resize()
+        .resize({ width: 800, height: 640 })
         .toBuffer();
       req.event.coverImg = buffer;
       await req.event.save();
