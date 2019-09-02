@@ -1,3 +1,4 @@
+const sharp = require("sharp");
 const multer = require("multer");
 const BaseJoi = require("@hapi/joi");
 const Extension = require("@hapi/joi-date");
@@ -91,9 +92,15 @@ router.post(
   coverImg.single("coverImg"),
   async (req, res) => {
     try {
-      req.event.coverImg = req.file.buffer;
+      const buffer = await sharp(req.file.buffer)
+        .png()
+        .resize()
+        .toBuffer();
+      req.event.coverImg = buffer;
       await req.event.save();
-      res.status(201).send();
+      res
+        .status(201)
+        .send({ success: "Cover image created/ updated successfully" });
     } catch (err) {
       res.status(400).send(err.message);
     }
@@ -104,29 +111,24 @@ router.post(
 );
 
 // fetch events' cover image
-router.get(
-  "/:id/coverImg",
-  async (req, res) => {
-    try {
-      const event = await Event.findById(req.params.id);
-      if (!event || !event.coverImg) throw new Error();
+router.get("/:id/coverImg", async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event || !event.coverImg) throw new Error();
 
-      res.set("Content-Type", "image/jpg");
-      res.status(200).send();
-    } catch (err) {
-      res.status(400).send({ error: error.message });
-    }
-  },
-  (error, req, res, next) => {
-    res.status(400).send({ error: error.message });
+    res.set("Content-Type", "image/png");
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send({ error: err.message });
   }
-);
+});
 
 // delete event's cover image
 router.delete("/:id/coverImg", async (req, res) => {
   try {
     req.event.coverImg = undefined;
-    res.status(200).send();
+    await req.event.save();
+    res.status(200).send({ success: "Event cover image successfully deleted" });
   } catch (err) {
     res.status(400).send({ error: error.message });
   }
