@@ -71,6 +71,7 @@ const upload = multer({
   }
 });
 
+// create and update avatar
 router.post(
   "/me/avatar",
   auth,
@@ -89,7 +90,35 @@ router.post(
   }
 );
 
-// update
+// fetch user's avatar
+router.get(
+  "/:id/avatar",
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id);
+      if (!user || !user.avatar) throw new Error();
+
+      res.set("Content-Type", "image/jpg");
+      res.send();
+    } catch (err) {
+      res.status(400).send({ error: error.message });
+    }
+  },
+  (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
+  }
+);
+
+router.delete("/me/avatar", auth, async (req, res) => {
+  try {
+    req.user.avatar = undefined;
+    res.status(200).send({ success: "Avatar successfully removed" });
+  } catch (err) {
+    res.status(400).send({ error: error.message });
+  }
+});
+
+// update user
 router.put("/me", auth, async (req, res) => {
   const schema = {
     name: Joi.string(),

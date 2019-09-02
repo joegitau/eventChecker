@@ -83,6 +83,8 @@ const coverImg = multer({
     cb(undefined, true);
   }
 });
+
+// create and update event's cover image
 router.post(
   "/:id/coverImg",
   auth,
@@ -100,6 +102,35 @@ router.post(
     res.status(400).send({ error: error.message });
   }
 );
+
+// fetch events' cover image
+router.get(
+  "/:id/coverImg",
+  async (req, res) => {
+    try {
+      const event = await Event.findById(req.params.id);
+      if (!event || !event.coverImg) throw new Error();
+
+      res.set("Content-Type", "image/jpg");
+      res.status(200).send();
+    } catch (err) {
+      res.status(400).send({ error: error.message });
+    }
+  },
+  (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
+  }
+);
+
+// delete event's cover image
+router.delete("/:id/coverImg", async (req, res) => {
+  try {
+    req.event.coverImg = undefined;
+    res.status(200).send();
+  } catch (err) {
+    res.status(400).send({ error: error.message });
+  }
+});
 
 // update event
 router.put("/", auth, async (req, res) => {
