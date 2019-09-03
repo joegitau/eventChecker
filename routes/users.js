@@ -39,6 +39,7 @@ router.post("/register", async (req, res) => {
     sendWelcomeEmail(user.email, user.name);
 
     const token = await user.generateAuthToken();
+
     res.status(201).send({ user, token });
   } catch (err) {
     res.status(401).send({ error: err.message });
