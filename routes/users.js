@@ -1,16 +1,20 @@
+const session = require("express-session");
+const bodyParser = require("body-parser");
 const sharp = require("sharp");
 const multer = require("multer");
 const _ = require("lodash");
 const Joi = require("@hapi/joi");
 const express = require("express");
+
 const router = express.Router();
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const auth = require("../middleware/auth");
 const User = require("../models/User");
 const { sendWelcomeEmail, sendDeleteEmail } = require("../emails/account");
 
 // register
-router.post("/register", async (req, res) => {
+router.post("/register", urlencodedParser, async (req, res) => {
   const schema = {
     name: Joi.string().required(),
     email: Joi.string()
@@ -40,23 +44,43 @@ router.post("/register", async (req, res) => {
 
     const token = await user.generateAuthToken();
 
-    res.status(201).send({ user, token });
+    // res.status(201).send({ user, token });
+    res.status(201).redirect("/login");
   } catch (err) {
     res.status(401).send({ error: err.message });
   }
 });
 
+// Options route used for preflight request to the login POST route (cors)
+router.options("/*", (req, res) => {
+  res.header("access-control-allow-origin", "*");
+  res.header("access-control-allow-methods", "POST");
+  res.header(
+    "access-control-allow-headers",
+    " Accept, access-control-allow-origin, Content-Type"
+  );
+  res.sendStatus(204);
+});
+
 // login
-router.post("/login", async (req, res) => {
+router.post("/login", urlencodedParser, async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findByCredentials(email, password);
     const token = await user.generateAuthToken();
 
     // res.status(200).send({ user: _.pick(user, ["name", "email", "phone", "address", "company"]), token});
-    res.status(200).send({ user, token });
+    // req.session.authToken = token;
+    // req.session.user = user;
+    // await req.session.save();
+
+    res
+      .header("x-auth-token", token)
+      .status(200)
+      .send({ user, token });
+    // res.redirect("/admin/users");
   } catch (err) {
-    res.status(400).send("Cannot login in User");
+    res.status(401).send({ error: err.message });
   }
 });
 
@@ -163,9 +187,21 @@ router.post("/logout", auth, async (req, res) => {
     await req.user.save();
     res.status(200).send("User successfully logged out");
   } catch (err) {
-    res.status(400).send("Cannot logout User");
+    res.status(400).send({ error: err.message });
   }
 });
+
+// logout by clearing stored sessions in mongodb
+// router.post("/logout", auth, async () => {
+//   try {
+//     req.session.destroy(err => {
+//       console.log(err);
+//       res.redirect("/");
+//     });
+//   } catch (err) {
+//     res.status(400).send({ error: err.message });
+//   }
+// });
 
 // logout from all sessions
 router.post("/logoutAll", auth, async (req, res) => {
@@ -174,7 +210,7 @@ router.post("/logoutAll", auth, async (req, res) => {
     await req.user.save();
     res.status(200).send("Successfully logged out from all devices");
   } catch (err) {
-    res.status(400).send("Cannot logout User");
+    res.status(400).send({ error: err.message });
   }
 });
 

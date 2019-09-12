@@ -1,0 +1,35 @@
+nav.navbar.navbar-expand-lg.bg-transparent.navbar-absolute
+  .container
+    .navbar-translate
+      button.navbar-toggler(type='button' data-toggle='collapse' data-target='#example-header-5' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+        span.navbar-toggler-bar.bar1
+        span.navbar-toggler-bar.bar2
+        span.navbar-toggler-bar.bar3
+      a.navbar-brand(href='/') Eventags
+    #example-header-5.collapse.navbar-collapse
+      .navbar-collapse-header
+        .row
+          .col-6.collapse-brand
+            a
+              | EVENTAGS 
+          .col-6.collapse-close.text-right
+            button.navbar-toggler(type='button' data-toggle='collapse' data-target='#example-header-5' aria-controls='navigation-index' aria-expanded='false' aria-label='Toggle navigation')
+              i.fas.fa-times
+      ul.navbar-nav.ml-auto
+        li.nav-item.active
+          a.nav-link(href='/')
+            | Home
+        li.nav-item
+          a.nav-link(href='/about')
+            | About
+        //- if user
+        //-   li.nav-item
+        //-     a.btn.btn-md.btn-simple.btn-login.nav-link(href='/login')
+        //-       | Logout
+        //- else
+        li.nav-item
+          a.nav-link(href='/login')
+            | Login
+        li.nav-item
+          a.btn.btn-md.btn-danger.btn-login.nav-link(href='/register')
+            | Register

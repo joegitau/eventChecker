@@ -1,0 +1,74 @@
+extend base
+block content
+  .section
+    .container
+      .row
+        .col-lg-10.ml-auto.mr-auto
+          .card.card-profile.card-horizontal
+            .row
+              .col-xl-7
+                .card-image.no-mask
+                  a(href='javascript:;')
+                    img.img(src='/img/charlie.jpg')
+              .col-xl-5
+                .card-body.mt-3
+                  each e in event
+                  h6.card-category Title
+                  h4.card-title= e.name
+                  br
+                  h6.card-category Venue
+                  h4.card-title= e.venue
+                  br
+                  .row
+                    .col-lg-4
+                      h6.card-category Guests
+                      h4.card-title 367
+                    .col-lg-4
+                      h6.card-category Projects
+                      h4.card-title 31
+                .card-footer
+                  h6.card-category Team
+                  a.avatar.rounded-circle(href='javascript:;', data-toggle='tooltip', data-original-title='Ryan Tompson')
+                    img(alt='Image placeholder', src='assets/img/james.jpg')
+                  a.avatar.rounded-circle(href='javascript:;', data-toggle='tooltip', data-original-title='Romina Hadid')
+                    img(alt='Image placeholder', src='assets/img/ryan.jpg')
+                  a.avatar.rounded-circle(href='javascript:;', data-toggle='tooltip', data-original-title='Alexander Smith')
+                    img(alt='Image placeholder', src='assets/img/lora.jpg')
+                  a.avatar.rounded-circle(href='javascript:;', data-toggle='tooltip', data-original-title='Jessica Doe')
+                    img(alt='Image placeholder', src='assets/img/mike.jpg')
+      .row.align-items-center
+        .col-lg-12.mx-auto
+          .card-body
+            .table-responsive
+              table.table.table-hover.table-striped
+                thead.text-primary
+                  tr
+                    //- th.text-center
+                    //-   | #
+                    th.text-center
+                      | Present/ Absent
+                    th.text-center
+                      | Name
+                    th.text-center
+                      | Email
+                    th.text-center
+                      | Phone
+                    th.text-center
+                      | Company
+                    th.text-right
+                      | Action
+                tbody
+                  tr.text-primary
+                    td.text-center Present
+                    td.text-center
+                      a(href='') Gladys
+                    td.text-center gladys@live.com
+                    td.text-center +7689004345
+                    td.text-center Glamorous Oy
+                    td.text-center Admin
+                    td.text-right
+                      a(href='').btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='View user')
+                        i.fas.fa-eye
+                      button.btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='Delete user')
+                        i.fas-fa-trash
+                        

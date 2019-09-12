@@ -1,0 +1,25 @@
+extend base
+block content
+  .page-header
+    .container
+      .col-lg-5.col-md-8.mx-auto
+        .card.card-login
+          form#userForm_login.form(method='POST' action='/users/login')
+            .card-header
+              h4.card-title.ml-3 login
+            .card-body
+              .input-group.input-lg
+                .input-group-prepend
+                  span.input-group-text
+                    i.fas.fa-envelope
+                input#login_email.form-control(type='email', name='email' placeholder='Email address...')
+              .input-group.input-lg
+                .input-group-prepend
+                  span.input-group-text
+                    i.fas.fa-lock
+                input#login_password.form-control(type='password', name='password' placeholder='Password...')
+            .card-footer.text-center
+              button.btn.btn-primary.btn-lg.btn-block Login
+            .text-center.my-3
+              h6
+                a.link.footer-link(href='/register') Don't have an Acoount? 

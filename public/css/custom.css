@@ -1,0 +1,100 @@
+/* Cuatom css */
+
+/* .page-header {
+  min-height: 100% !important;
+  max-height: 100% !important;
+  padding: 0;
+  color: #fff;
+  position: relative;
+  overflow: auto;
+} */
+
+.mt--6,
+.my--6 {
+  margin-top: -4.5rem !important;
+}
+
+body {
+  background-color: #f8f9fe !important;
+  color: #525f7f !important;
+}
+
+.header-5 {
+  background: #188cf8 !important;
+}
+
+.navbar .navbar-toggler-bar {
+  background: #5603ad !important;
+}
+
+.navbar .navbar-brand {
+  color: #5603ad !important;
+}
+
+.nav-item .login-btn {
+  padding: 6px 20px !important;
+}
+
+.navbar .navbar-nav .nav-item .nav-link {
+  color: #32325d !important;
+  font-size: 1rem !important;
+}
+
+/* .navbar-collapse {
+  background: #5603ad !important;
+} */
+
+.text-primary {
+  color: #5603ad !important;
+}
+
+.text-tertiary {
+  color: #525f7f !important;
+}
+
+.card {
+  background: #fefefe !important;
+}
+
+.card-register .card-header .card-title,
+.card-login .card-header .card-title {
+  color: #344675 !important;
+  font-size: 3.4rem !important;
+}
+
+.form-control {
+  border-color: #dee2e6 !important;
+  color: #32325d !important;
+  /* border: 1px solid #cad1d7; */
+}
+
+.btn-primary {
+  background: #5603ad !important;
+}
+
+.input-group-prepend .input-group-text {
+  border-color: #dee2e6 !important;
+}
+
+.input-group-prepend .input-group-text {
+  color: #2b3553 !important;
+}
+
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > tfoot > tr > td,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > thead > tr > th {
+  padding: 12px 7px;
+  vertical-align: middle;
+  color: #0a0a47;
+}
+
+.title {
+  color: #32325d !important;
+}
+
+.footer {
+  background: #5603ad !important;
+}
