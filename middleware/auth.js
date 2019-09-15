@@ -4,9 +4,19 @@ const Event = require("../models/Event");
 
 async function auth(req, res, next) {
   try {
-    const token =
-      req.header("Authorization").replace("Bearer ", "") ||
-      req.header["x-auth-token"];
+    // let token;
+    // if (
+    //   req.headers.authorization &&
+    //   req.headers.authorization.startsWith("Bearer")
+    // ) {
+    //   token = req.headers.authorization.replace("Bearer ", "");
+    // }
+    // console.log(token);
+
+    // const token = req.cookies['Authorization'].replace('Bearer ', '')
+    console.log(req.cookies.authorization);
+    // const token = req.header("Authorization").replace("Bearer ", "");
+    const token = req.cookies["Authorization"].replace("Bearer ", "");
     const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
 
     const user = await User.findOne({
@@ -23,7 +33,7 @@ async function auth(req, res, next) {
 
     next();
   } catch (err) {
-    res.status(403).send("user Not Authorized.");
+    res.status(403).send({ error: err.message });
   }
 }
 

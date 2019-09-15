@@ -1,0 +1,41 @@
+.card.card-profile
+  .card-image
+    h4.title= user.name
+    .dropdown
+      button.btn.btn-link.dropdown-toggle.btn-icon(type='button', data-toggle='dropdown', aria-expanded='false')
+        i.fas.fa-cog
+      .dropdown-menu.dropdown-menu-right(x-placement='bottom-end', style='position: absolute; transform: translate3d(-122px, 22px, 0px); top: 0px; left: 0px; will-change: transform;')
+        a.dropdown-item(href='javascript:;') Update Password
+        a.dropdown-item(href='javascript:;') Delete Profile
+    a(href='javascript:;')
+      img.img.img-raised.rounded(src='/img/michael.jpg')
+  .card-body
+    hr.line-primary
+    h3.job-title.text-primary= user.name
+    h5.job-title.text-primary= user.company
+    .table-responsive
+      table#plain-table.table.tablesorter
+        tbody
+          tr
+            td.text-left
+              i.fas.fa-envelope
+              |  Email
+            td.text-right= user.email
+          tr
+            td.text-left
+              i.fas.fa-mobile
+              |  Phone
+            td.text-right= user.phone
+          tr
+            td.text-left
+              i.fas.fa-map-marker-alt
+              |  Address
+            td.text-right= user.address
+          tr
+            td.text-left
+              i.fas.fa-tag
+              |  Status
+            if user.isAdmin
+              td.text-right Admin
+            else 
+              td.text-right User

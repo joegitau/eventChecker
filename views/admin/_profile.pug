@@ -1,0 +1,40 @@
+.card
+  .card-body
+    form#userForm_update.js-validate
+      .container
+        h3.profile-title.text-left.text-default Admin Info
+        .row
+          .col-md-6
+            label.labels
+              | Full Name
+              span.text-danger *
+            input#name.form-control(type='text', name='name', value=`${user.name}`)
+          .col-md-6
+            .js-form-message.mb-6
+              label.labels
+                | Email address
+                span.text-danger *
+              input#email.form-control(type='email', name='email', value=`${user.email}`)        
+        br
+        .row
+          .col-md-6
+            label.labels
+              | Company
+            input#company.form-control(type='text', name='company', value=`${user.company}`)
+          .col-md-6
+            label.labels
+              | Phone
+            input#phone.form-control(type='text', name='phone', value=`${user.phone}`)
+        br
+        .row
+          .col-md-8
+            label.labels
+              | Address
+            input#address.form-control(type='text', name='address', value=`${user.address}`)
+          .col-md-4
+            label.labels
+              | Postal code
+            input#postcode.form-control(type='text', name='postcode', placeholder='00670')
+        br
+        .d-flex.justify-content-between.align-items-center
+          button.btn.btn-primary.btn-md(type='submit') Update profile

@@ -2,130 +2,44 @@ extend base
 block content
   .section
     .container
+      .row.align-items-center.py-4
+        .col-lg-6.col-7
+          nav.d-none.d-md-inline-block.ml-md-4(aria-label='breadcrumb')
+            ol.breadcrumb.breadcrumb-links.breadcrumb-dark
+              li.breadcrumb-item
+                a(href='/')
+                  i.fas.fa-home
+              li.breadcrumb-item.active(aria-current='page') Profile
+          h2.title.d-inline-block.mb-0.ml-3.mt-0= `Hello, ${user.name.split(' ')[0]}`
+        .col-lg-6.col-5.text-right
+          a.btn.btn-sm.btn-default(href='/users/me/new-event') Create Event
       .row
         .col-lg-8
-          h2.title= `Hello, ${user.name.split(' ')[0]}`
-          .nav.nav-tabs.nav-tabs-primary.btn-group(role='tablist')
-            a.btn.btn-sm.btn-info.btn-simple.active(data-toggle='tab', href='#gen_info', role='tablist')
-              | General Info
-            a.btn.btn-sm.btn-info.btn-simple(data-toggle='tab', href='#my_events', role='tablist')
-              | My Events
-          .tab-content.tab-space
-            #gen_info.tab-pane.active
-              .card
-                .card-body
-                  form#userForm_update.js-validate
-                    .container
-                      h3.profile-title.text-left.text-default General Info
-                      .row
-                        .col-md-12
-                          label.labels
-                            | Full Name
-                            span.text-danger *
-                          input#update_name.form-control(type='text', name='update_name', value=`${user.name}`)
-                      br
-                      .row
-                        .col-md-6
-                          .js-form-message.mb-6
-                            label.labels
-                              | Email address
-                              span.text-danger *
-                            input#update_email.form-control(type='email', name='update_email', value=`${user.email}`)
-                        .col-md-6
-                          .js-form-message.mb-6
-                            label.labels
-                              | Password
-                              span.text-danger *
-                            input#update_password.form-control(type='password', placeholder='Type new password to update...')
-                      br
-                      .row
-                        .col-md-6
-                          label.labels
-                            | Company
-                          input#update_company.form-control(type='text', name='update_company', value=`${user.company}`)
-                        .col-md-6
-                          label.labels
-                            | Phone
-                          input#update_phone.form-control(type='text', name='update_phone', value=`${user.phone}`)
-                      br
-                      .row
-                        .col-md-8
-                          label.labels
-                            | Address
-                          input#update_address.form-control(type='text', name='update_address', value=`${user.address}`)
-                        .col-md-4
-                          label.labels
-                            | Postal code
-                          input#update_postcode.form-control(type='text', name='update_postcode', placeholder='00670')
-                      br
-                      .d-flex.justify-content-between.align-items-center
-                        button.btn.btn-info.btn-md(type='submit') Update profile
-            #my_events.tab-pane
-              .card
-                .card-body
-                  h3.profile-title.text-left My Events
-                  .table-responsive
-                    table.table
-                      thead.text-primary
-                        tr
-                          th.text-left
-                            | Title
-                          th.text-left
-                            | Venue
-                          th.text-center
-                            | Date
-                          th.text-center
-                            | Time
-                          th.text-center
-                            | Duration
-                      tbody
-                        each event in events
-                          tr
-                            td.text-left
-                              a(href=`/event/${event._id}`)= event.title
-                            td.text-left= event.venue
-                            td.text-center= event.eventDate.toLocaleString('en-GB', { timezone: 'UTC'})
-                            td.text-center= event.eventTime
-                            td.text-center= event.duration                 
+          if user.isAdmin
+            .nav.nav-tabs.nav-tabs-primary.btn-group(role='tablist')
+              a.btn.btn-sm.btn-info.btn-simple.active(data-toggle='tab', href='#all_users', role='tablist')            
+                | All Users
+              a.btn.btn-sm.btn-info.btn-simple(data-toggle='tab', href='#gen_info', role='tablist')
+                | Edit Profile             
+            .tab-content.tab-space
+              #all_users.tab-pane.active
+                include admin/_users
+              #gen_info.tab-pane
+                include admin/_profile              
+          else
+            .nav.nav-tabs.nav-tabs-primary.btn-group(role='tablist')
+              a.btn.btn-sm.btn-info.btn-simple.active(data-toggle='tab', href='#my_events', role='tablist')            
+                | My Events
+              a.btn.btn-sm.btn-info.btn-simple(data-toggle='tab', href='#gen_info', role='tablist')
+                | Edit Profile              
+            .tab-content.tab-space
+              #my_events.tab-pane.active
+                include user/_events 
+              #gen_info.tab-pane
+                include user/_profile                                  
         .col-lg-4
-          h2.title About
-          .card.card-profile(data-background='full')
-            a(href='javascript:;')
-              img.img.img-raised.rounded(src='/img/charlie.jpg')
-            .card-image
-              h4.title= user.name
-              .dropdown
-                button.btn.btn-link.dropdown-toggle.btn-icon(type='button', data-toggle='dropdown', aria-expanded='false')
-                  i.tim-icons.icon-settings-gear-63
-                .dropdown-menu.dropdown-menu-right(x-placement='bottom-end')
-                  a.dropdown-item(href='javascript:;') Edit Profile
-                  a.dropdown-item(href='javascript:;') Delete Profile
-            .card-body
-              hr.line-primary
-              h3.job-title= user.company
-              .table-responsive
-                table#plain-table.table
-                  tbody
-                    tr
-                      td.text-left
-                        i.tim-icons.icon-atom
-                        |  Email
-                      td.text-right= user.email
-                    tr
-                      td.text-left
-                        i.tim-icons.icon-user-run
-                        |  Phone
-                      td.text-right= user.phone
-                    tr
-                      td.text-left
-                        i.tim-icons.icon-chart-bar-32
-                        |  Address
-                      td.text-right= user.address
-                    tr
-                      td.text-left
-                        i.tim-icons.icon-chart-bar-32
-                        |  Status
-                      if user.isAdmin
-                        td.text-right Admin
-                      else 
-                        td.text-right User
+          include user/_card
+          br
+          .form#user_delete.mb-3(method='' action='/users/me')
+            a.btn.btn-simple.btn-lg() Delete Profile
+

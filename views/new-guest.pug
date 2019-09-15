@@ -1,0 +1,71 @@
+extend base
+block content
+  .section
+    .container
+      .row.align-items-center.py-4
+        .col-lg-6.col-7
+          nav.d-none.d-md-inline-block.ml-md-4(aria-label='breadcrumb')
+            ol.breadcrumb.breadcrumb-links.breadcrumb-dark
+              li.breadcrumb-item
+                a(href='/')
+                  i.fas.fa-home
+              li.breadcrumb-item
+                a(href=`/events/${event._id}`) My Event
+              li.breadcrumb-item
+                a(href='/events') All Events
+              li.breadcrumb-item.active(aria-current='page') New Guest
+        .col-lg-6.col-5.text-right
+          a.btn.btn-sm.btn-default(href='#') Create Event
+      .row
+        .col-lg-10.ml-auto.mr-auto
+          .card
+            .card-body
+              form#guestForm_create.js-validate(method='POST' action='/guests')
+                .container
+                  h3.profile-title.text-left.text-default Guest's Info
+                  .row
+                    .col-md-12
+                      label.labels
+                        | Select Event
+                        span.text-danger *
+                      select.form-control                       
+                        option(value='#') Select Event to populate Guest
+                        each event in events
+                          option(value= event.title)= event.title
+                  .row
+                    .col-md-12
+                      label.labels
+                        | Full Names
+                        span.text-danger *
+                      input#name.form-control(type='text', name='name', placeholder='Full names...')
+                  .row
+                    .col-md-6
+                      label.labels
+                        | Email
+                        span.text-danger *
+                      input#email.form-control(type='email', name='email', placeholder='Email...')
+                    .col-md-6
+                      .js-form-message.mb-6
+                        label.labels
+                          | Phone
+                        input#phone.form-control(type='text', name='phone', placeholder='Phone...')        
+                  .row
+                    .col-md-6
+                      label.labels
+                        | Company
+                      input#company.form-control(type='text', name='company', placeholder='Company...')
+                    .col-md-6
+                      label.labels
+                        | Address
+                      input#address.form-control(type='text', name='address', placeholder='Address...')
+                  .row
+                    .col-md-6
+                        label.labels
+                          | Status
+                        input#isVip.form-control(type='text', name='isVip', placeholder='Guest status...')
+                    .col-md-6
+                      label.labels
+                        | Availability
+                      input#isArrived.form-control(type='text', name='isArrived', placeholder='Availabilty...')
+                  .d-flex.justify-content-between.align-items-center
+                    button.btn.btn-primary.btn-md(type='submit') Add Guest

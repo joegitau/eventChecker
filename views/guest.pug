@@ -1,0 +1,17 @@
+extend base
+block content
+  .section
+    .container
+      .row.align-items-center.py-4
+        .col-lg-6.col-7
+          nav.d-none.d-md-inline-block.ml-md-4(aria-label='breadcrumb')
+            ol.breadcrumb.breadcrumb-links.breadcrumb-dark
+              li.breadcrumb-item
+                a(href='/')
+                  i.fas.fa-home
+              li.breadcrumb-item
+                a(href=`/events/${event._id}`) My Event
+              li.breadcrumb-item.active(aria-current='page') Guest's Profile
+          h2.title.d-inline-block.mb-0.ml-3.mt-0= guest.name
+        .col-lg-6.col-5.text-right
+          a.btn.btn-sm.btn-default(href='/users/me/new-event') Edit Guest

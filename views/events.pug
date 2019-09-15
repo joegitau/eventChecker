@@ -36,14 +36,14 @@ block content
                         .photo
                           img(src="/img/tania.jpg" alt=`${event.title}`)
                       td.text-center
-                        a(href=`/event/${event._id}`)= event.title                      
+                        a(href=`/events/${event._id}`)= event.title                      
                       td.text-center= event.venue
                       td.text-center= event.eventDate
                       td.text-center= event.eventTime
                       td.text-center= event.duration
                       td.text-right
-                        a(href=`/event/${event._id}`).btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='View event')
+                        a(href=`/events/${event._id}`).btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='View event')
                           i.fas.fa-eye
                         button.btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='Delete event')
-                          i.fas-fa-trash
+                          i.fas.fa-trash
                         

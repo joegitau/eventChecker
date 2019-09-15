@@ -34,12 +34,14 @@ router.post("/", auth, async function(req, res) {
     await guest.save();
     res.status(201).send(guest);
   } catch (err) {
-    res.status(401).send("Guest not created");
+    res.status(401).send({ error: err.message });
   }
 });
 
 router.get("/:id", auth, async (req, res) => {
   try {
+    const guests = await Guest.find({ eventId: req.event._id }).sort("-name");
+
     const guest = await Guest.findOne({
       _id: req.params.id
     }).populate(
@@ -47,9 +49,10 @@ router.get("/:id", auth, async (req, res) => {
       "title venue eventDate eventTime duration capacity -_id"
     );
     if (!guest) return res.status(400).send("Guest with given ID not found");
-    res.status(200).send(guest);
+
+    res.status(200).render("guest", { guest, guests });
   } catch (err) {
-    res.status(401).send("Guest not found");
+    res.status(401).send({ errror: err.message });
   }
 });
 

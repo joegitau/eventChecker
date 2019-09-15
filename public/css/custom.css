@@ -1,18 +1,4 @@
-/* Cuatom css */
-
-/* .page-header {
-  min-height: 100% !important;
-  max-height: 100% !important;
-  padding: 0;
-  color: #fff;
-  position: relative;
-  overflow: auto;
-} */
-
-.mt--6,
-.my--6 {
-  margin-top: -4.5rem !important;
-}
+/* Custom css */
 
 body {
   background-color: #f8f9fe !important;
@@ -20,15 +6,15 @@ body {
 }
 
 .header-5 {
-  background: #188cf8 !important;
+  background: #0a0a47 !important;
 }
 
 .navbar .navbar-toggler-bar {
-  background: #5603ad !important;
+  background: #0a0a47 !important;
 }
 
 .navbar .navbar-brand {
-  color: #5603ad !important;
+  color: #0a0a47 !important;
 }
 
 .nav-item .login-btn {
@@ -56,10 +42,23 @@ body {
   background: #fefefe !important;
 }
 
+.card-event {
+  background: #0a0a47 !important;
+}
+
 .card-register .card-header .card-title,
 .card-login .card-header .card-title {
-  color: #344675 !important;
+  color: #0a0a47 !important;
   font-size: 3.4rem !important;
+}
+
+.card-profile .table td i {
+  color: #0a0a47 !important;
+}
+
+.card-profile,
+.card-testimonial {
+  margin-top: 15px;
 }
 
 .form-control {
@@ -69,7 +68,45 @@ body {
 }
 
 .btn-primary {
-  background: #5603ad !important;
+  background: #0a0a47 !important;
+}
+
+.btn.btn-simple,
+.navbar .navbar-nav > a.btn.btn-simple {
+  border-color: #0a0a47 !important;
+  background: transparent !important;
+}
+
+.btn.btn-simple.active,
+.navbar .navbar-nav > a.btn.btn-simple.active {
+  border-color: #0a0a47 !important;
+}
+
+.btn-info.btn-simple {
+  color: #0a0a47;
+  border-color: #0a0a47;
+  background: transparent;
+}
+
+.btn.active,
+.btn.active:focus,
+.btn.active:hover,
+.btn:active,
+.btn:active:focus,
+.btn:active:hover,
+.btn:focus,
+.btn:hover,
+.navbar .navbar-nav > a.btn.active,
+.navbar .navbar-nav > a.btn.active:focus,
+.navbar .navbar-nav > a.btn.active:hover,
+.navbar .navbar-nav > a.btn:active,
+.navbar .navbar-nav > a.btn:active:focus,
+.navbar .navbar-nav > a.btn:active:hover,
+.navbar .navbar-nav > a.btn:focus,
+.navbar .navbar-nav > a.btn:hover {
+  background-color: #0a0a47 !important;
+  color: #fff;
+  box-shadow: none;
 }
 
 .input-group-prepend .input-group-text {
@@ -91,10 +128,41 @@ body {
   color: #0a0a47;
 }
 
+table,
+th,
+td {
+  border-color: #f3f3f3 !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(246, 246, 246, 0.75);
+}
+
 .title {
   color: #32325d !important;
 }
 
+.breadcrumb {
+  background: #0a0a47 !important;
+}
+
 .footer {
-  background: #5603ad !important;
+  background: #0a0a47 !important;
+}
+
+.mt--6,
+.my--6 {
+  margin-top: -4.5rem !important;
+}
+
+.pb--1 {
+  padding-bottom: 0.5rem !important;
+}
+
+.text-1 {
+  font-size: 1rem !important;
+}
+
+.text-gray {
+  color: rgba(255, 255, 255, 0.5) !important;
 }

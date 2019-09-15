@@ -1,3 +1,4 @@
+const bodyParser = require("body-parser");
 const sharp = require("sharp");
 const multer = require("multer");
 const BaseJoi = require("@hapi/joi");
@@ -5,19 +6,23 @@ const Extension = require("@hapi/joi-date");
 const Joi = BaseJoi.extend(Extension);
 Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
+
 const router = express.Router();
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const auth = require("../middleware/auth");
 const Event = require("../models/Event");
 const User = require("../models/User");
+const Guest = require("../models/Guest");
 
 // create event
-router.post("/", auth, async (req, res) => {
+router.post("/", urlencodedParser, auth, async (req, res) => {
   const schema = {
     title: Joi.string().required(),
     venue: Joi.string().required(),
     eventDate: Joi.date()
-      .format("YYYY-MM-DD")
+      .format("DD.MM.YYYY")
+      .raw()
       .required(),
     eventTime: Joi.string().required(),
     duration: Joi.number().required(),
@@ -33,9 +38,10 @@ router.post("/", auth, async (req, res) => {
       creator: req.user._id
     });
     await event.save();
-    res.status(201).send(event);
+    // res.status(201).send(event);
+    res.status(201).redirect("/users/me");
   } catch (err) {
-    res.status(400).send("Event not created");
+    res.status(400).send({ error: err.message });
   }
 });
 
@@ -52,9 +58,10 @@ router.get("/", auth, async (req, res) => {
       })
       .execPopulate();
 
-    res.status(200).send(req.user.events);
+    res.status(200).render("events", { events: req.user.events });
+    // res.status(200).send(req.user.events);
   } catch (err) {
-    res.status(400).send("Events not found");
+    res.status(400).send({ error: err.message });
   }
 });
 
@@ -66,9 +73,13 @@ router.get("/:id", auth, async (req, res) => {
       creator: req.user._id
     });
     if (!event) return res.status(400).send("Event with given ID not found");
-    res.status(200).send(event);
+
+    const guests = await Guest.find({ eventId: event._id }).sort("-name");
+
+    res.status(200).render("event", { event, guests });
+    // res.status(200).send(event);
   } catch (err) {
-    res.status(400).send("Event not found");
+    res.status(400).send({ error: err.message });
   }
 });
 
@@ -102,7 +113,7 @@ router.post(
         .status(201)
         .send({ success: "Cover image created/ updated successfully" });
     } catch (err) {
-      res.status(400).send(err.message);
+      res.status(400).send({ error: err.message });
     }
   },
   (error, req, res, next) => {

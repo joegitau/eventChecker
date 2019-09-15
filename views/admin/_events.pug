@@ -1,0 +1,41 @@
+.card
+  .card-body
+    h3.profile-title.text-left All Events
+    .table-responsive
+      table.table.table-hover.table-striped
+        thead.text-primary
+          tr
+            //- th.text-center
+            //-   | #
+            th.text-center
+              | Image
+            th
+              | Title
+            th.text-center
+              | Venue
+            th.text-center
+              | Date
+            th.text-center
+              | Time
+            th.text-center
+              | Duration
+            th.text-right
+              | Action
+        tbody
+          each event in events
+            tr.text-primary
+              //- td.text-center= event._id
+              td.text-center
+                .photo
+                  img(src="/img/tania.jpg" alt=`${event.title}`)
+              td.text-center
+                a(href=`/event/${event._id}`)= event.title                      
+              td.text-center= event.venue
+              td.text-center= event.eventDate
+              td.text-center= event.eventTime
+              td.text-center= event.duration
+              td.text-right
+                a(href=`/event/${event._id}`).btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='View event')
+                  i.fas.fa-eye
+                button.btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='Delete event')
+                  i.fas-fa-trash

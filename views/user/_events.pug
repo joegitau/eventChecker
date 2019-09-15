@@ -1,0 +1,35 @@
+.card
+  .card-header.border-bottom.pb--1
+    .row
+      .col-lg-6
+        form#search_events.form-inline.mr-sm-3
+          .form-group.mb-0
+            .input-group.input-group-alternative.input-group-merge
+              .input-group-prepend
+                span.input-group-text
+                  i.fas.fa-search
+              input.form-control(placeholder='Search events...', type='text')
+  .card-body
+    .table-responsive
+      table.table
+        thead.text-primary
+          tr
+            th.text-left
+              | Title
+            th.text-left
+              | Venue
+            th.text-center
+              | Date
+            th.text-center
+              | Time
+            th.text-center
+              | Duration
+        tbody
+          each event in events
+            tr
+              td.text-left
+                a(href=`/events/${event._id}`)= event.title
+              td.text-left= event.venue
+              td.text-center= event.eventDate.toLocaleString('en-GB', { timezone: 'UTC'})
+              td.text-center= event.eventTime
+              td.text-center= event.duration

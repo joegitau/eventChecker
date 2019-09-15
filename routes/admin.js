@@ -18,21 +18,21 @@ router.get("/users", auth, async (req, res) => {
 
     res.status(200).render("users", { users });
   } catch (err) {
-    res.status(401).render({ error: err.message });
+    res.status(401).render("not-found");
   }
 });
 
-// get user
-router.get("/users/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) throw new Error();
+// // get user
+// router.get("/users/:id", async (req, res) => {
+//   try {
+//     const user = await User.findById(req.params.id);
+//     if (!user) throw new Error();
 
-    const events = await Event.find({ creator: user._id });
-    res.status(200).render("user", { user, events });
-  } catch (err) {
-    res.status(404).render("not-found");
-  }
-});
+//     const events = await Event.find({ creator: user._id });
+//     res.status(200).render("user", { user, events });
+//   } catch (err) {
+//     res.status(404).render("not-found");
+//   }
+// });
 
 module.exports = router;

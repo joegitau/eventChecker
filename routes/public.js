@@ -43,8 +43,6 @@ router.get("/login", (req, res) => {
   }
 });
 
-// update user
-
 /**************
  * Events
  *************/
@@ -62,13 +60,36 @@ router.get("/allevents", async (req, res) => {
 });
 
 // get event ---> admin only
-router.get("/event/:id", async (req, res) => {
-  try {
-    // const user = await User.findOne({ creator: })
+// router.get("/event/:id", async (req, res) => {
+//   try {
+//     // const user = await User.findOne({ creator: })
 
-    const event = await Event.findById(req.params.id);
-    if (!event) throw new Error();
-    res.status(200).render({ event });
+//     const event = await Event.findById(req.params.id);
+//     if (!event) throw new Error();
+//     res.status(200).render({ event });
+//   } catch (err) {
+//     res.status(401).render({ error: err.message });
+//   }
+// });
+
+// create new event
+router.get("/users/me/new-event", auth, async (req, res) => {
+  try {
+    res.status(200).render("new-event");
+  } catch (err) {
+    res.status(401).render({ error: err.message });
+  }
+});
+
+// create new guest
+router.get("/events/:id/new-guest", auth, async (req, res) => {
+  try {
+    const events = await Event.find({ creator: req.user._id }).sort(
+      "-createdAt"
+    );
+
+    const event = await Event.findOne({ _id: req.params.id });
+    res.status(200).render("new-guest", { event, events });
   } catch (err) {
     res.status(401).render({ error: err.message });
   }

@@ -1,4 +1,3 @@
-const session = require("express-session");
 const bodyParser = require("body-parser");
 const sharp = require("sharp");
 const multer = require("multer");
@@ -11,6 +10,8 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const auth = require("../middleware/auth");
 const User = require("../models/User");
+const Event = require("../models/Event");
+
 const { sendWelcomeEmail, sendDeleteEmail } = require("../emails/account");
 
 // register
@@ -69,24 +70,29 @@ router.post("/login", urlencodedParser, async (req, res) => {
     const user = await User.findByCredentials(email, password);
     const token = await user.generateAuthToken();
 
-    // res.status(200).send({ user: _.pick(user, ["name", "email", "phone", "address", "company"]), token});
-    // req.session.authToken = token;
-    // req.session.user = user;
-    // await req.session.save();
-
     res
-      .header("x-auth-token", token)
+      // .cookie("auth-token", token, { httpOnly: true })
+      .cookie("Authorization", "Bearer " + token, { httpOnly: false })
       .status(200)
-      .send({ user, token });
-    // res.redirect("/admin/users");
+      // .send({ user, token })
+      .redirect("/users/me");
   } catch (err) {
     res.status(401).send({ error: err.message });
   }
 });
 
 // current user
-router.get("/me", auth, (req, res) => {
-  res.status(200).send(req.user);
+router.get("/me", auth, async (req, res) => {
+  try {
+    const events = await Event.find({ creator: req.user._id });
+
+    const allUsers = await User.find().sort("name");
+
+    res.status(200).render("user", { user: req.user, events, allUsers });
+    // res.status(200).send(req.user);
+  } catch (err) {
+    res.status(404).render("not-found");
+  }
 });
 
 // upload avatars
@@ -155,7 +161,7 @@ router.delete("/me/avatar", auth, async (req, res) => {
 });
 
 // update user
-router.put("/me", auth, async (req, res) => {
+router.put("/me", [urlencodedParser, auth], async (req, res) => {
   const schema = {
     name: Joi.string(),
     email: Joi.string().email(),
@@ -174,9 +180,9 @@ router.put("/me", auth, async (req, res) => {
       new: true
     });
     await user.save();
-    res.status(201).send(user);
+    res.status(201).render("user", { user });
   } catch (err) {
-    res.status(400).send("Cannot update User");
+    res.status(400).send({ error: err.message });
   }
 });
 
@@ -190,18 +196,6 @@ router.post("/logout", auth, async (req, res) => {
     res.status(400).send({ error: err.message });
   }
 });
-
-// logout by clearing stored sessions in mongodb
-// router.post("/logout", auth, async () => {
-//   try {
-//     req.session.destroy(err => {
-//       console.log(err);
-//       res.redirect("/");
-//     });
-//   } catch (err) {
-//     res.status(400).send({ error: err.message });
-//   }
-// });
 
 // logout from all sessions
 router.post("/logoutAll", auth, async (req, res) => {

@@ -1,7 +1,3 @@
-/***********
- * USERS
- * ********* */
-
 // REGISTER
 function register() {
   const registerUser = async (
@@ -37,70 +33,3 @@ function register() {
     registerUser(name, email, password, phone, address, company);
   });
 }
-
-// CURRENT USER
-// function currentUser() {
-//   const me = () => {
-
-//   }
-// }
-
-// UPDATE
-function update() {
-  const updateUser = async (name, email, password, phone, address, company) => {
-    try {
-      axios({
-        method: "PUT",
-        url: "users/:id",
-        data: { name, email, password, phone, address, company }
-      });
-    } catch (err) {
-      console.log({ error: err.response.data });
-    }
-  };
-
-  document.getElementById("userForm_update").addEventListener("submit", e => {
-    e.preventDefault();
-    // console.log("clicked");
-    const name = document.getElementById("update_name").value,
-      email = document.getElementById("update_email").value,
-      password = document.getElementById("update_password").value,
-      phone = document.getElementById("update_phone").value,
-      address = document.getElementById("update_address").value,
-      company = document.getElementById("update_company").value;
-
-    updateUser(name, email, password, phone, address, company);
-  });
-}
-
-// DELETE
-
-// LOGIN
-function login() {
-  const loginUser = async (email, password) => {
-    try {
-      const res = await axios({
-        method: "POST",
-        url: "/users/login",
-        data: { email, password }
-      });
-      console.log(res);
-    } catch (err) {
-      console.log({ error: err.response.data });
-    }
-  };
-
-  document.getElementById("userForm_login").addEventListener("submit", e => {
-    e.preventDefault();
-
-    const email = document.getElementById("login_email").value;
-    const password = document.getElementById("login_password").value;
-
-    loginUser(email, password);
-  });
-}
-
-login();
-
-register();
-update();
