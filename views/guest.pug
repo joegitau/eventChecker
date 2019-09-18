@@ -15,3 +15,87 @@ block content
           h2.title.d-inline-block.mb-0.ml-3.mt-0= guest.name
         .col-lg-6.col-5.text-right
           a.btn.btn-sm.btn-default(href='/users/me/new-event') Edit Guest
+      .row
+        .col-lg-7
+          .card
+            .card-body
+              form#guestForm_update.js-validate
+                .container
+                  h3.profile-title.text-left.text-default Guest Info
+                  //- .row
+                  //-   .col-md-12
+                  //-     .js-form-message.mb-6
+                  //-       label.labels
+                  //-         | Event Name 
+                  //-       input#eventId.form-control(type='text', name='eventId', value= event._id)
+                  .row
+                    .col-md-12
+                      .js-form-message.mb-12
+                        label.labels
+                          | Full Name
+                          span.text-danger *
+                        input#name.form-control(type='text', name='name', value=`${guest.name}`)       
+                  .row
+                    .col-md-6
+                      .js-form-message.mb-6
+                        label.labels
+                          | Email address
+                          span.text-danger *
+                        input#email.form-control(type='email', name='email', value=`${guest.email}`) 
+                    .col-md-6
+                      label.labels
+                        | Phone
+                      input#phone.form-control(type='text', name='phone', value=`${guest.phone}`)
+                  .row
+                    .col-md-6
+                      label.labels
+                        | Company
+                      input#company.form-control(type='text', name='company', value=`${guest.company}`)
+                    .col-md-6
+                      label.labels
+                        | Address
+                      input#address.form-control(type='text', name='address', value=`${guest.address}`)
+                  .row
+                    .col-md-6
+                      label.labels
+                        | Role
+                      if guest.isVip
+                        input#isVip.form-control(type='text', name='isVip', value=1)
+                      else
+                        input#isVip.form-control(type='text', name='isVip', value=0)
+                    .col-md-6
+                      label.labels
+                        | Availability
+                      if guest.isArrived
+                        input#availability.form-control(type='text', name='isArrived', value='checked In')
+                      else
+                        input#availability.form-control(type='text', name='isArrived', value='Absent')
+                  .d-flex.justify-content-between.align-items-center
+                    button.btn.btn-primary.btn-md(type='submit') Update Guest profile
+        .col-lg-5.col-md-6.ml-auto.mr-auto
+          .card.card-badge
+            .card-body.p-0
+              .badge-content
+                .col__3
+                  h4.vertical-text= user.company.split(' ')[0]
+                .col__9
+                  table.table.table-borderless
+                    tbody
+                      tr
+                        td.p-0
+                          if guest.isVip
+                            h2.role VIP
+                          else
+                            h2.role guest
+                      tr
+                        td.p-0
+                          h3.fname= guest.name
+                      tr
+                        td.p-0
+                          h6.company= guest.company
+                        td.p-0 &nbsp;
+                      tr
+                        td.p-0
+                          h4.event_date= event.eventDate
+
+

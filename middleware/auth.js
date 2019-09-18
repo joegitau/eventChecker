@@ -4,16 +4,6 @@ const Event = require("../models/Event");
 
 async function auth(req, res, next) {
   try {
-    // let token;
-    // if (
-    //   req.headers.authorization &&
-    //   req.headers.authorization.startsWith("Bearer")
-    // ) {
-    //   token = req.headers.authorization.replace("Bearer ", "");
-    // }
-    // console.log(token);
-
-    // const token = req.cookies['Authorization'].replace('Bearer ', '')
     console.log(req.cookies.authorization);
     // const token = req.header("Authorization").replace("Bearer ", "");
     const token = req.cookies["Authorization"].replace("Bearer ", "");
@@ -30,6 +20,8 @@ async function auth(req, res, next) {
     req.event = event;
     req.token = token;
     req.user = user;
+
+    res.locals.user = user;
 
     next();
   } catch (err) {

@@ -52,7 +52,7 @@ router.post("/register", urlencodedParser, async (req, res) => {
   }
 });
 
-// Options route used for preflight request to the login POST route (cors)
+// handle preflight request on the login POST route (cors)
 router.options("/*", (req, res) => {
   res.header("access-control-allow-origin", "*");
   res.header("access-control-allow-methods", "POST");
@@ -70,9 +70,17 @@ router.post("/login", urlencodedParser, async (req, res) => {
     const user = await User.findByCredentials(email, password);
     const token = await user.generateAuthToken();
 
+    const cookieOptions = {
+      expires: new Date(
+        Date.now() + process.env.AUTH_TOKEN_EXPIRY_DATE * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true
+    };
+
+    if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+
     res
-      // .cookie("auth-token", token, { httpOnly: true })
-      .cookie("Authorization", "Bearer " + token, { httpOnly: false })
+      .cookie("Authorization", "Bearer " + token, cookieOptions)
       .status(200)
       // .send({ user, token })
       .redirect("/users/me");
@@ -95,17 +103,42 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
-// upload avatars
-const upload = multer({
-  limits: {
-    fileSize: 1000000
-  },
-  fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpg|jpeg|png)$/))
-      cb(new Error("Image must be either be of type: JPG, JPEG, or PNG"));
-
-    cb(undefined, true);
+// create new event
+router.get("/me/new-event", auth, async (req, res) => {
+  try {
+    res.status(200).render("new-event");
+  } catch (err) {
+    res.status(401).render({ error: err.message });
   }
+});
+
+// upload avatars
+// storage
+// const multerStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "public/img/users");
+//   },
+//   filename: (req, file, cb) => {
+//     const ext = file.mimetype.split("/")[1];
+//     // user-id-date.ext
+//     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+//   }
+// });
+
+const multerStorage = multer.memoryStorage();
+
+// filters
+const multerFilter = (req, file, cb) => {
+  if (!file.originalname.match(/\.(jpg|jpeg|png)$/))
+    cb(new Error("Image must be either be of type: JPG, JPEG, or PNG"));
+
+  cb(undefined, true);
+};
+
+const upload = multer({
+  limits: { fileSize: 1000000 },
+  storage: multerStorage,
+  fileFilter: multerFilter
 });
 
 // create and update avatar
@@ -115,19 +148,32 @@ router.post(
   upload.single("avatar"),
   async (req, res) => {
     try {
-      const buffer = await sharp(req.file.buffer)
-        .png()
-        .resize({ width: 200, height: 200 })
-        .toBuffer();
-      req.user.avatar = buffer;
+      // const buffer = await sharp(req.file.buffer)
+      //   .png()
+      //   .resize({ width: 400, height: 400 })
+      //   .toBuffer();
+      // req.user.avatar = buffer;
+
+      req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+
+      sharp(req.file.buffer)
+        .resize(400, 400)
+        .toFormat("jpeg")
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/users/${req.file.filename}`);
+
+      req.user.avatar = req.file.filename;
+
       await req.user.save();
-      res.status(201).send({ success: "Avatar created/ updated" });
+
+      // res.status(201).send({ success: "Image profile added/ updated" });
+      res.status(201).redirect("/users/me");
     } catch (err) {
       res.status(401).send({ error: err.message });
     }
   },
   (error, req, res, next) => {
-    res.status(400).send({ error: error.message });
+    res.status(401).send({ error: error.message });
   }
 );
 
@@ -139,7 +185,7 @@ router.get(
       const user = await User.findById(req.params.id);
       if (!user || !user.avatar) throw new Error();
 
-      res.set("Content-Type", "image/png");
+      res.set("Content-Type", "image/jpeg");
       res.send(user.avatar);
     } catch (err) {
       res.status(400).send({ error: error.message });
@@ -180,7 +226,7 @@ router.put("/me", [urlencodedParser, auth], async (req, res) => {
       new: true
     });
     await user.save();
-    res.status(201).render("user", { user });
+    res.status(201).redirect("/me");
   } catch (err) {
     res.status(400).send({ error: err.message });
   }
@@ -191,9 +237,9 @@ router.post("/logout", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter(t => t.token !== req.token);
     await req.user.save();
-    res.status(200).send("User successfully logged out");
+    res.status(200).redirect("/");
   } catch (err) {
-    res.status(400).send({ error: err.message });
+    res.status(400).render({ error: err.message });
   }
 });
 
@@ -202,9 +248,9 @@ router.post("/logoutAll", auth, async (req, res) => {
   try {
     req.user.tokens = [];
     await req.user.save();
-    res.status(200).send("Successfully logged out from all devices");
+    res.status(200).redirect("/");
   } catch (err) {
-    res.status(400).send({ error: err.message });
+    res.status(400).render({ error: err.message });
   }
 });
 
@@ -215,7 +261,8 @@ router.delete("/me", auth, async (req, res) => {
 
     sendDeleteEmail(req.user.email, req.user.name);
 
-    res.status(200).send(req.user);
+    // res.status(200).send(req.user);
+    res.status(200).redirect("/");
   } catch (err) {
     res.status(400).send({ error: err.message });
   }

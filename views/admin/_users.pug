@@ -5,8 +5,8 @@
       table.table.table-hover.table-striped
         thead.text-primary
           tr
-            th.text-center
-              | #
+            //- th.text-center
+            //-   | #
             th.text-center
               | Name
             th
@@ -24,7 +24,7 @@
         tbody
           each user in allUsers
             tr.text-primary
-              td.text-center= user._id
+              //- td.text-center= user._id
               td.text-center
                 a(href='')= user.name
               td.text-center
@@ -33,12 +33,12 @@
               td.text-center= user.company
               td.text-center= user.email
               td.text-center= user.phone
-              if user.isAmin
+              if user.isAdmin
                 td.text-center Admin
               else
                 td.text-center User
               td.text-right
-                a(href=`users/${user._id}`)
+                a(href=`/users/${user._id}`)
                   i.fas.fa-eye
                 button.btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='Delete user')
                   i.fas-fa-trash

@@ -17,33 +17,39 @@ block content
           a.btn.btn-sm.btn-default(href=`/events/${event._id}/new-guest`) Add Guest
           a.btn.btn-sm.btn-default(href=`/events/${event._id}/update-event`) Edit Event
       .row
-        .col-lg-10.ml-auto.mr-auto
-          .card.card-profile.card-horizontal.card-event
-            .row
-              .col-xl-7
-                .card-image.no-mask
-                  a(href='javascript:;')
-                    img.img(src='/img/comete-coco.jpg')
-              .col-xl-5
-                .card-body.mt-3                 
-                  h4.card-category.text-gray.text-1 Title
-                  h3.card-title= event.title
-                  br
-                  h4.card-category.text-gray.text-1 Venue
-                  h3.card-title= event.venue
-                  br
-                  .row
-                    .col-lg-6
-                      h4.card-category.text-gray.text-1 Total Guests
-                      if guests.length >= 0
-                        h4.card-title= `${guests.length} guests`
-                      else 
-                        h4.card-title 0 guests
-                    .col-lg-6
-                      h4.card-category.text-gray.text-1 Guests Present
-                      h4.card-title 31
-      .row.align-items-center
-        .col-lg-12.mx-auto
+        .col-md-3.col-sm-12
+          .card.card-pricing.card-event
+            .card-header
+              .card-image.no-mask
+                a(href='javascript:;')
+                  img.img(src='/img/comete-coco.jpg')
+            .card-body
+              h6 Title
+              h4= event.title
+              ul
+                li
+                  h6 Venue
+                  h4= event.venue
+                  event.venue
+                li
+                  h6 Date
+                  h4= event.eventDate
+                li
+                  h6 Time
+                  h4= event.eventTime
+                li
+                  h6 Total Guests
+                    if guests.length >= 0
+                      h4= `${guests.length} guests`
+                    else 
+                      h4 0 guests                
+                li
+                  h6 Checked In Guests 
+                  if guests.isArrived >= 0
+                    h4= `${guests.isArrived} checked In`
+                  else
+                    h4 0 checked In
+        .col-md-9.col-sm-12
           .card
             .card-header.border-bottom.pb--1
               .row
@@ -84,7 +90,7 @@ block content
                         else 
                           td.text-center Absent
                         td.text-center
-                          a(href='')= guest.name
+                          a(href=`/events/${event._id}/guest/${guest._id}`)= guest.name
                         td.text-center= guest.email
                         td.text-center= guest.phone
                         td.text-center= guest.company
@@ -93,7 +99,7 @@ block content
                         else
                           td.text-center Guest
                         td.text-right
-                          a(href='/')
+                          a(href=`/events/${event._id}/guest/${guest._id}`)
                             i.fas.fa-eye
                           a(href='/')
                             i.fas.fa-trash

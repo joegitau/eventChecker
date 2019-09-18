@@ -1,15 +1,18 @@
+const bodyParser = require("body-parser");
 const BaseJoi = require("@hapi/joi");
 const Extension = require("@hapi/joi-date");
 const Joi = BaseJoi.extend(Extension);
 Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
+
 const router = express.Router();
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const auth = require("../middleware/auth");
 const Guest = require("../models/Guest");
 const Event = require("../models/Event");
 
-router.post("/", auth, async function(req, res) {
+router.post("/", urlencodedParser, auth, async function(req, res) {
   const schema = {
     name: Joi.string().required(),
     email: Joi.string()
@@ -32,7 +35,8 @@ router.post("/", auth, async function(req, res) {
     const guest = new Guest({ ...req.body, eventId: event._id });
 
     await guest.save();
-    res.status(201).send(guest);
+    // res.status(201).send(guest);
+    res.status(201).redirect("/events");
   } catch (err) {
     res.status(401).send({ error: err.message });
   }

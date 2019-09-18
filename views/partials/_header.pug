@@ -22,10 +22,41 @@ nav.navbar.navbar-expand-lg.bg-transparent.navbar-absolute
         li.nav-item
           a.nav-link(href='/about')
             | About
-            
-        li.nav-item
-          a.nav-link(href='/login')
-            | Login
-        li.nav-item
-          a.nav-link(href='/register')
-            | Register
+        if user 
+          ul.navbar-nav.ml-auto
+            li.dropdown.nav-item
+              a.dropdown-toggle.nav-link(href='javascript:void(0)', data-toggle='dropdown')
+                .notification.d-none.d-lg-block.d-xl-block
+                .fas.fa-share-square
+                p.d-lg-none
+                  | Quick Links
+              ul.dropdown-menu.dropdown-menu-right.dropdown-navbar
+                li.nav-link
+                  a.nav-item.dropdown-item(href='/users/me/new-event') Create new Event
+                li.nav-link
+                  a.nav-item.dropdown-item(href='/users/me') View all My Events
+            li.dropdown.nav-item
+              a.dropdown-toggle.nav-link(href='#', data-toggle='dropdown')
+                h4.text-default.mr-3= user.name.split(' ')[0]
+                .photo
+                  img(src=`/img/users/${user.avatar}`, alt=`${user.name}`)
+                b.caret.d-none.d-lg-block.d-xl-block
+                p.d-lg-none
+                  | Log out
+              ul.dropdown-menu.dropdown-navbar
+                li.nav-link
+                  a.nav-item.dropdown-item(href='/users/me') Profile
+                li.dropdown-divider
+                li.nav-link
+                  form#user_logout.form(method='POST' action='/users/logoutAll')
+                    button.nav-item.dropdown-item(type='submit') Log out
+            li.separator.d-lg-none
+        else  
+          li.nav-item
+            a.nav-link(href='/login')
+              | Login
+          li.nav-item
+            a.nav-link(href='/register')
+              | Register
+
+

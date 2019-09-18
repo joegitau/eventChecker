@@ -83,6 +83,37 @@ router.get("/:id", auth, async (req, res) => {
   }
 });
 
+// create new guest
+router.get("/:id/new-guest", auth, async (req, res) => {
+  try {
+    const events = await Event.find({ creator: req.user._id }).sort(
+      "-createdAt"
+    );
+
+    const event = await Event.findOne({ _id: req.params.id });
+    res.status(200).render("new-guest", { event, events });
+  } catch (err) {
+    res.status(401).render({ error: err.message });
+  }
+});
+
+// fetch guest
+router.get("/:id/guest/:guestId", auth, async (req, res) => {
+  try {
+    const user = req.user;
+    const event = await Event.findOne({ _id: req.params.id });
+
+    const guest = await Guest.findOne({
+      _id: req.params.guestId,
+      eventId: req.params.id
+    });
+
+    res.status(200).render("guest", { guest, event, user });
+  } catch (err) {
+    res.status(401).render({ error: err.message });
+  }
+});
+
 // cover image
 const coverImg = multer({
   options: {

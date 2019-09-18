@@ -17,16 +17,3 @@ const getToken = async () => {
     body: JSON.stringify(data)
   });
 };
-
-const login = async () => {
-  const res = await getToken();
-  if (res.status === 200) {
-    const token = await res.send();
-    console.log(token);
-    localStorage.setItem("Authorization", token);
-    window.location.href = "/users";
-  } else {
-    console.log("Token not saved to localstorage");
-    // document.getElementById("errors").style.display = "block";
-  }
-};

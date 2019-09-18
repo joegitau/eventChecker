@@ -1,5 +1,5 @@
 .card.card-profile
-  .card-image
+  .card-image.no-mask
     h4.title= user.name
     .dropdown
       button.btn.btn-link.dropdown-toggle.btn-icon(type='button', data-toggle='dropdown', aria-expanded='false')
@@ -8,7 +8,7 @@
         a.dropdown-item(href='javascript:;') Update Password
         a.dropdown-item(href='javascript:;') Delete Profile
     a(href='javascript:;')
-      img.img.img-raised.rounded(src='/img/michael.jpg')
+      img.img.img-raised.rounded(src=`/img/users/${user.avatar}`, alt=`${user.name}`)
   .card-body
     hr.line-primary
     h3.job-title.text-primary= user.name

@@ -26,29 +26,26 @@ block content
                   .row
                     .col-md-12
                       label.labels
-                        | Select Event
-                        span.text-danger *
-                      select.form-control                       
-                        option(value='#') Select Event to populate Guest
-                        each event in events
-                          option(value= event.title)= event.title
+                        | Event Name
+                      input#eventId.form-control(type='text', name='eventId', value= event._id)
                   .row
                     .col-md-12
-                      label.labels
-                        | Full Names
-                        span.text-danger *
-                      input#name.form-control(type='text', name='name', placeholder='Full names...')
+                      .js-form-message.mb-6
+                        label.labels
+                          | Full Names
+                          span.text-danger *
+                        input#name.form-control(type='text', name='name', placeholder='Full names...')
                   .row
-                    .col-md-6
-                      label.labels
-                        | Email
-                        span.text-danger *
-                      input#email.form-control(type='email', name='email', placeholder='Email...')
                     .col-md-6
                       .js-form-message.mb-6
                         label.labels
-                          | Phone
-                        input#phone.form-control(type='text', name='phone', placeholder='Phone...')        
+                          | Email
+                          span.text-danger *
+                        input#email.form-control(type='email', name='email', placeholder='Email...')
+                    .col-md-6
+                      label.labels
+                        | Phone
+                      input#phone.form-control(type='text', name='phone', placeholder='Phone...')        
                   .row
                     .col-md-6
                       label.labels
@@ -58,14 +55,11 @@ block content
                       label.labels
                         | Address
                       input#address.form-control(type='text', name='address', placeholder='Address...')
-                  .row
-                    .col-md-6
-                        label.labels
-                          | Status
-                        input#isVip.form-control(type='text', name='isVip', placeholder='Guest status...')
-                    .col-md-6
-                      label.labels
-                        | Availability
-                      input#isArrived.form-control(type='text', name='isArrived', placeholder='Availabilty...')
+                  //- .row
+                  //-   .col-md-6
+                  //-       label.labels
+                  //-         | Select Guest Status
+                  //-         span.text-danger *
+                  //-       input#address.form-control(type='text', name='', placeholder='Address...')
                   .d-flex.justify-content-between.align-items-center
                     button.btn.btn-primary.btn-md(type='submit') Add Guest
