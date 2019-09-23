@@ -3,47 +3,66 @@ block content
   .section
     .container
       .row
-        .col-lg-12
-          h2.title All Events
+        .col-lg-6.col-7
+          nav.d-none.d-md-inline-block.ml-md-4(aria-label='breadcrumb')
+            ol.breadcrumb.breadcrumb-links.breadcrumb-dark
+              li.breadcrumb-item
+                a(href='/')
+                  i.fas.fa-home
+              li.breadcrumb-item
+                a(href='/users/me') My Profile
+              li.breadcrumb-item.active(aria-current='page') All Events
+        .col-lg-6.col-5.text-right
+          a.btn.btn-sm.btn-primary(href='/users/me/new-event') Create new Event
       .row.align-items-center
         .col-lg-12.mx-auto
-          .card-body
-            .table-responsive
-              table.table.table-hover.table-striped
-                thead.text-primary
-                  tr
-                    //- th.text-center
-                    //-   | #
-                    th.text-center
-                      | Image
-                    th
-                      | Title
-                    th.text-center
-                      | Venue
-                    th.text-center
-                      | Date
-                    th.text-center
-                      | Time
-                    th.text-center
-                      | Duration
-                    th.text-right
-                      | Action
-                tbody
-                  each event in events
-                    tr.text-primary
-                      //- td.text-center= event._id
-                      td.text-center
-                        .photo
-                          img(src="/img/tania.jpg" alt=`${event.title}`)
-                      td.text-center
-                        a(href=`/events/${event._id}`)= event.title                      
-                      td.text-center= event.venue
-                      td.text-center= event.eventDate
-                      td.text-center= event.eventTime
-                      td.text-center= event.duration
-                      td.text-right
-                        a(href=`/events/${event._id}`).btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='View event')
-                          i.fas.fa-eye
-                        button.btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='Delete event')
-                          i.fas.fa-trash
-                        
+          .card
+            .card-header.border-bottom.pb--1
+              .row
+                .col-lg-6
+                  form#search_events.form-inline.mr-sm-3
+                    .form-group.mb-0
+                      .input-group.input-group-alternative.input-group-merge
+                        .input-group-prepend
+                          span.input-group-text
+                            i.fas.fa-search
+                        input.form-control(placeholder='Search events...', type='text')
+            .card-body
+              .table-responsive
+                table.table.table-hover.table-striped
+                  thead.text-primary
+                    tr
+                      //- th.text-center
+                      //-   | #
+                      th.text-center
+                        | Image
+                      th.text-center
+                        | Title
+                      th.text-center
+                        | Venue
+                      th.text-center
+                        | Date
+                      th.text-center
+                        | Time
+                      th.text-center
+                        | Duration
+                      th.text-right
+                        | Action
+                  tbody
+                    each event in events
+                      tr.text-primary
+                        //- td.text-center= event._id
+                        td.text-center
+                          .photo
+                            img(src=`/img/events/${event.coverImg}` alt=`${event.title}`)
+                        td.text-center
+                          a(href=`/events/${event._id}`)= event.title                      
+                        td.text-center= event.venue
+                        td.text-center= event.eventDate
+                        td.text-center= event.eventTime
+                        td.text-center= event.duration
+                        td.text-right
+                          form.form(method='POST' action=`/events/${event._id}?_method=DELETE`)
+                            button.btn.btn-link.btn-plain.btn-sm.btn-icon(type='submit' rel='tooltip' data-original-title='Delete event')
+                              i.fas.fa-trash
+                          

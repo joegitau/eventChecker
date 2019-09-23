@@ -18,7 +18,7 @@ block content
           a.btn.btn-sm.btn-default(href='#') Create Event
       .row
         .col-lg-10.ml-auto.mr-auto
-          .card
+          .card.mt-0
             .card-body
               form#guestForm_create.js-validate(method='POST' action='/guests')
                 .container
@@ -55,11 +55,16 @@ block content
                       label.labels
                         | Address
                       input#address.form-control(type='text', name='address', placeholder='Address...')
-                  //- .row
-                  //-   .col-md-6
-                  //-       label.labels
-                  //-         | Select Guest Status
-                  //-         span.text-danger *
-                  //-       input#address.form-control(type='text', name='', placeholder='Address...')
+                  .row
+                    .col-md-6
+                        label.labels
+                          | Guest Status
+                          span.text-danger *
+                        input#status.form-control(type='text', name='isVip', placeholder='options, VIP, GUEST or STAFF...')
+                    .col-md-6
+                        label.labels
+                          | Availability
+                          span.text-danger *
+                        input#availability.form-control(type='text', name='isArrived', placeholder='options, ARRIVED or ABSENT...')
                   .d-flex.justify-content-between.align-items-center
                     button.btn.btn-primary.btn-md(type='submit') Add Guest

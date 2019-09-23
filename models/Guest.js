@@ -22,12 +22,31 @@ const guestSchema = new mongoose.Schema(
     address: String,
     company: String,
     isVip: {
-      type: Boolean,
-      default: false
+      type: String,
+      enum: ["guest", "vip", "staff"],
+      default: "guest",
+      validate: {
+        validator: function(v) {
+          if (v !== "guest" || v !== "vip" || v !== "staff") {
+            return;
+          }
+        },
+        message: "Status must either be, guest, vip or staff"
+      }
     },
     isArrived: {
-      type: Boolean,
-      default: false
+      type: String,
+      uppercase: true,
+      enum: ["ARRIVED", "ABSENT"],
+      default: "ABSENT",
+      validate: {
+        validator: function(v) {
+          if (v !== "ARRIVED" || V !== "ABSENT") {
+            return;
+          }
+        },
+        message: "Availabilty must either be, ABSENT or ARRIVED"
+      }
     },
     eventId: {
       type: mongoose.Schema.Types.ObjectId,

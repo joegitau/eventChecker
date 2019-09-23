@@ -3,7 +3,7 @@ block content
   .section
     .container
       .row.align-items-center.py-4
-        .col-lg-6.col-7
+        .col-sm-12
           nav.d-none.d-md-inline-block.ml-md-4(aria-label='breadcrumb')
             ol.breadcrumb.breadcrumb-links.breadcrumb-dark
               li.breadcrumb-item
@@ -13,21 +13,13 @@ block content
                 a(href=`/events/${event._id}`) My Event
               li.breadcrumb-item.active(aria-current='page') Guest's Profile
           h2.title.d-inline-block.mb-0.ml-3.mt-0= guest.name
-        .col-lg-6.col-5.text-right
-          a.btn.btn-sm.btn-default(href='/users/me/new-event') Edit Guest
       .row
         .col-lg-7
-          .card
+          .card.mt-0
             .card-body
-              form#guestForm_update.js-validate
+              form#guestForm_update.js-validate(method='POST' action=`/events/${event._id}/guest/${guest._id}?_method=PUT`)
                 .container
                   h3.profile-title.text-left.text-default Guest Info
-                  //- .row
-                  //-   .col-md-12
-                  //-     .js-form-message.mb-6
-                  //-       label.labels
-                  //-         | Event Name 
-                  //-       input#eventId.form-control(type='text', name='eventId', value= event._id)
                   .row
                     .col-md-12
                       .js-form-message.mb-12
@@ -58,18 +50,12 @@ block content
                   .row
                     .col-md-6
                       label.labels
-                        | Role
-                      if guest.isVip
-                        input#isVip.form-control(type='text', name='isVip', value=1)
-                      else
-                        input#isVip.form-control(type='text', name='isVip', value=0)
+                        | Status
+                      input#isVip.form-control(type='text', name='isVip', value=`${guest.isVip}`)
                     .col-md-6
                       label.labels
                         | Availability
-                      if guest.isArrived
-                        input#availability.form-control(type='text', name='isArrived', value='checked In')
-                      else
-                        input#availability.form-control(type='text', name='isArrived', value='Absent')
+                      input#availability.form-control(type='text', name='isArrived', value=`${guest.isArrived}`)
                   .d-flex.justify-content-between.align-items-center
                     button.btn.btn-primary.btn-md(type='submit') Update Guest profile
         .col-lg-5.col-md-6.ml-auto.mr-auto
@@ -83,10 +69,7 @@ block content
                     tbody
                       tr
                         td.p-0
-                          if guest.isVip
-                            h2.role VIP
-                          else
-                            h2.role guest
+                          h2.role= guest.isVip
                       tr
                         td.p-0
                           h3.fname= guest.name

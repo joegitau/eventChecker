@@ -1,0 +1,77 @@
+extend base
+block content
+  .section
+    .container
+      .row.align-items-center.py-4
+        .col-md-12
+          nav.d-none.d-md-inline-block.ml-md-4(aria-label='breadcrumb')
+            ol.breadcrumb.breadcrumb-links.breadcrumb-dark
+              li.breadcrumb-item
+                a(href='/')
+                  i.fas.fa-home
+              li.breadcrumb-item
+                a(href='/events') All Events
+              li.breadcrumb-item
+                a(href=`/events/${event._id}`) My Event
+              li.breadcrumb-item.active(aria-current='page') Update Event
+      .row
+        .col-md-4.col-sm-12
+          .card.mt-0
+            .card-body.text-center
+              form#user_add_coverImg.form(method='POST' action=`/events/${event._id}/coverImg` enctype='multipart/form-data' )
+                .fileinput.fileinput-new.text-center(data-provides='fileinput')
+                  .fileinput-new.thumbnail.img-circle.img-raised
+                    img(src=`/img/events/${event.coverImg}`, alt=`${event.name}`)
+                  .fileinput-preview.fileinput-exists.thumbnail.img-circle.img-raised
+                  div            
+                    label.avatar-upload(for='avatar-upload')
+                      input(type='file', name='coverImg', accept='image/*', id='avatar-upload')
+                button.btn.btn-primary.btn-sm(type='submit') Update Cover image
+        .col-md-8.col-sm-12
+          .card.mt-0
+            .card-body
+              form#eventForm_update.js-validate(method='POST' action=`/events/${event._id}?_method=PUT`)
+                .container
+                  h3.profile-title.text-left.text-default Event Info
+                  .row
+                    .col-md-12
+                      labels.label
+                        | Event Title
+                        span.text-danger *
+                      input#title.form-control(type='text', name='title', value=`${event.title}`)
+                  br
+                  .row
+                    .col-md-6
+                      label.labels
+                        | Venue
+                        span.text-danger *
+                      input#venue.form-control(type='text', name='venue', value=`${event.venue}`)
+                    .col-md-6
+                      .js-form-message.mb-6
+                        label.labels
+                          | Address
+                          span.text-danger *
+                        input#address.form-control(type='text', name='address', value=`${event.address}`)        
+                  br
+                  .row
+                    .col-md-4
+                      label.labels
+                        | Event Date
+                      input#eventDate.form-control(type='text', value=`${event.eventDate}`)
+                    .col-md-4
+                      label.labels
+                        | Event Time
+                      input#eventTime.form-control(type='text', value=`${event.eventTime}`)
+                    .col-md-4
+                      label.labels
+                        | Duration (Days)
+                      input#duration.form-control(type='number', value=`${event.duration}`)
+                  br
+                  .row
+                    .col-md-12
+                      .label.labels
+                        | Description
+                      textarea.form-control(name='description', rows='4', cols='80')= event.description
+                  br
+                  .d-flex.justify-content-between.align-items-center
+                    button.btn.btn-primary.btn-md(type='submit') Update event

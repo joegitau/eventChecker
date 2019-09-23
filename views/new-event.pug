@@ -10,13 +10,11 @@ block content
                 a(href='/')
                   i.fas.fa-home
               li.breadcrumb-item
-                a(href='/users/me') All Events
+                a(href='/events') All Events
               li.breadcrumb-item.active(aria-current='page') New Event
-        .col-lg-6.col-5.text-right
-          a.btn.btn-sm.btn-default(href='#') Create Event
       .row
         .col-lg-10.ml-auto.mr-auto
-          .card
+          .card.mt-0
             .card-body
               form#eventForm_create.js-validate(method='POST' action='/events')
                 .container
@@ -34,12 +32,12 @@ block content
                         | Venue
                         span.text-danger *
                       input#venue.form-control(type='text', name='venue', placeholder='Venue...')
-                    //- .col-md-6
-                    //-   .js-form-message.mb-6
-                    //-     label.labels
-                    //-       | Address
-                    //-       span.text-danger *
-                    //-     input#address.form-control(type='text', name='address', placeholder='Address...')        
+                    .col-md-6
+                      .js-form-message.mb-6
+                        label.labels
+                          | Address
+                          span.text-danger *
+                        input#address.form-control(type='text', name='address', placeholder='Address...')        
                   br
                   .row
                     .col-md-4

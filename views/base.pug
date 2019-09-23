@@ -11,5 +11,16 @@ head
   title Eventstag
 body
   include partials/_header
+  .row.align-items-center.py-4
+    .col-md-6.ml-auto.mr-auto
+      != messages('partials/_messages', locals)
+      if errors
+        each error, i in errors
+          div(class=`alert alert-danger alert-with-icon`) 
+            button.close(type='button', aria-hidden='true', data-dismiss='alert', aria-label='Close')
+              i.fas.fa-times.icon-simple-remove
+            span
+              i.fas.alarm.mr-2
+              b= error.details[0].message
   block content
   include partials/_footer

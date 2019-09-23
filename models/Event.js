@@ -22,13 +22,17 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
+    address: String,
     description: String,
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User"
     },
-    coverImg: Buffer
+    coverImg: {
+      type: String,
+      default: "default-event.png"
+    }
   },
   {
     timestamps: true

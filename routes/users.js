@@ -1,4 +1,3 @@
-const bodyParser = require("body-parser");
 const sharp = require("sharp");
 const multer = require("multer");
 const _ = require("lodash");
@@ -6,7 +5,6 @@ const Joi = require("@hapi/joi");
 const express = require("express");
 
 const router = express.Router();
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const auth = require("../middleware/auth");
 const User = require("../models/User");
@@ -15,7 +13,7 @@ const Event = require("../models/Event");
 const { sendWelcomeEmail, sendDeleteEmail } = require("../emails/account");
 
 // register
-router.post("/register", urlencodedParser, async (req, res) => {
+router.post("/register", async (req, res) => {
   const schema = {
     name: Joi.string().required(),
     email: Joi.string()
@@ -32,11 +30,12 @@ router.post("/register", urlencodedParser, async (req, res) => {
     isAdmin: Joi.boolean()
   };
   const { error } = Joi.validate(req.body, schema);
-  if (error) return res.status(400).send(error.details[0].message);
+  // if (error) return res.status(400).send(error.details[0].message);
+  if (error) return req.flash("danger", `${error.details[0].message}`);
 
   try {
     let user = await User.findOne({ email: req.body.email });
-    if (user) res.status(401).send("Email already registered");
+    if (user) req.flash("danger", "Email already exists.");
 
     user = new User(req.body);
     await user.save();
@@ -45,10 +44,11 @@ router.post("/register", urlencodedParser, async (req, res) => {
 
     const token = await user.generateAuthToken();
 
-    // res.status(201).send({ user, token });
+    req.flash("primary", "User profile successfully created. Please Login.");
     res.status(201).redirect("/login");
   } catch (err) {
-    res.status(401).send({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).redirect("back");
   }
 });
 
@@ -64,10 +64,11 @@ router.options("/*", (req, res) => {
 });
 
 // login
-router.post("/login", urlencodedParser, async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findByCredentials(email, password);
+
     const token = await user.generateAuthToken();
 
     const cookieOptions = {
@@ -82,10 +83,10 @@ router.post("/login", urlencodedParser, async (req, res) => {
     res
       .cookie("Authorization", "Bearer " + token, cookieOptions)
       .status(200)
-      // .send({ user, token })
       .redirect("/users/me");
   } catch (err) {
-    res.status(401).send({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).redirect("back");
   }
 });
 
@@ -94,36 +95,24 @@ router.get("/me", auth, async (req, res) => {
   try {
     const events = await Event.find({ creator: req.user._id });
 
-    const allUsers = await User.find().sort("name");
+    const allUsers = await User.find().sort("-name");
 
     res.status(200).render("user", { user: req.user, events, allUsers });
-    // res.status(200).send(req.user);
   } catch (err) {
-    res.status(404).render("not-found");
+    req.flash("danger", `${err.message}`);
+    res.status(401).render("not-found", { error: err.message });
   }
 });
 
-// create new event
+// render new event view page
 router.get("/me/new-event", auth, async (req, res) => {
   try {
     res.status(200).render("new-event");
   } catch (err) {
-    res.status(401).render({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).render("not-found", { error: err.message });
   }
 });
-
-// upload avatars
-// storage
-// const multerStorage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "public/img/users");
-//   },
-//   filename: (req, file, cb) => {
-//     const ext = file.mimetype.split("/")[1];
-//     // user-id-date.ext
-//     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-//   }
-// });
 
 const multerStorage = multer.memoryStorage();
 
@@ -148,12 +137,6 @@ router.post(
   upload.single("avatar"),
   async (req, res) => {
     try {
-      // const buffer = await sharp(req.file.buffer)
-      //   .png()
-      //   .resize({ width: 400, height: 400 })
-      //   .toBuffer();
-      // req.user.avatar = buffer;
-
       req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
       sharp(req.file.buffer)
@@ -166,14 +149,16 @@ router.post(
 
       await req.user.save();
 
-      // res.status(201).send({ success: "Image profile added/ updated" });
+      req.flash("primary", "Profile image successfully added.");
       res.status(201).redirect("/users/me");
     } catch (err) {
-      res.status(401).send({ error: err.message });
+      req.flash("danger", `${err.message}`);
+      res.status(401).redirect("back");
     }
   },
   (error, req, res, next) => {
-    res.status(401).send({ error: error.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).render("not-found", { error: error.message });
   }
 );
 
@@ -188,11 +173,13 @@ router.get(
       res.set("Content-Type", "image/jpeg");
       res.send(user.avatar);
     } catch (err) {
-      res.status(400).send({ error: error.message });
+      req.flash("danger", `${err.message}`);
+      res.status(401).render("not-found", { error: err.message });
     }
   },
   (error, req, res, next) => {
-    res.status(400).send({ error: error.message });
+    req.flash("danger", `${err.message}`);
+    res.status(400).render("not-found", { error: error.message });
   }
 );
 
@@ -200,14 +187,17 @@ router.delete("/me/avatar", auth, async (req, res) => {
   try {
     req.user.avatar = undefined;
     await req.user.save();
-    res.status(200).send({ success: "Avatar successfully removed" });
+
+    req.flash("primary", "Profile image successfully deleted");
+    res.status(200).redirect("back");
   } catch (err) {
-    res.status(400).send({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).redirect("back");
   }
 });
 
 // update user
-router.put("/me", [urlencodedParser, auth], async (req, res) => {
+router.put("/me", auth, async (req, res) => {
   const schema = {
     name: Joi.string(),
     email: Joi.string().email(),
@@ -226,9 +216,12 @@ router.put("/me", [urlencodedParser, auth], async (req, res) => {
       new: true
     });
     await user.save();
-    res.status(201).redirect("/me");
+
+    req.flash("primary", "User successfully updated.");
+    res.status(201).redirect("back");
   } catch (err) {
-    res.status(400).send({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).redirect("back");
   }
 });
 
@@ -237,9 +230,11 @@ router.post("/logout", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter(t => t.token !== req.token);
     await req.user.save();
+
     res.status(200).redirect("/");
   } catch (err) {
-    res.status(400).render({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).redirect("back");
   }
 });
 
@@ -248,9 +243,11 @@ router.post("/logoutAll", auth, async (req, res) => {
   try {
     req.user.tokens = [];
     await req.user.save();
+
     res.status(200).redirect("/");
   } catch (err) {
-    res.status(400).render({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).redirect("back");
   }
 });
 
@@ -261,11 +258,25 @@ router.delete("/me", auth, async (req, res) => {
 
     sendDeleteEmail(req.user.email, req.user.name);
 
-    // res.status(200).send(req.user);
+    req.flash("primary", "Profile successfully deleted.");
     res.status(200).redirect("/");
   } catch (err) {
-    res.status(400).send({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).redirect("back");
   }
 });
+
+// router.delete("/:userId", auth, async (req, res) => {
+//   try {
+//     const user_id = req.params.userId;
+
+//     const user = await User.deleteOne({ _id: user_id, userId: req.user._id });
+
+//     res.status().json({ success: "user successfully deleted" });
+//   } catch (err) {
+//     res.status(401).render("not-found", { error: err.message });
+//   }
+//   const user_id = req.params.userId;
+// });
 
 module.exports = router;

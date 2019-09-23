@@ -1,40 +1,57 @@
 .card
   .card-body
-    form#userForm_update.js-validate
-      .container
-        h3.profile-title.text-left.text-default General Info
-        .row
-          .col-md-6
-            label.labels
-              | Full Name
-              span.text-danger *
-            input#name.form-control(type='text', name='name', value=`${user.name}`)
-          .col-md-6
-            .js-form-message.mb-6
-              label.labels
-                | Email address
-                span.text-danger *
-              input#email.form-control(type='email', name='email', value=`${user.email}`)        
-        br
-        .row
-          .col-md-6
-            label.labels
-              | Company
-            input#company.form-control(type='text', name='company', value=`${user.company}`)
-          .col-md-6
-            label.labels
-              | Phone
-            input#phone.form-control(type='text', name='phone', value=`${user.phone}`)
-        br
-        .row
-          .col-md-8
-            label.labels
-              | Address
-            input#address.form-control(type='text', name='address', value=`${user.address}`)
-          .col-md-4
-            label.labels
-              | Postal code
-            input#postcode.form-control(type='text', name='postcode', placeholder='00670')
-        br
-        .d-flex.justify-content-between.align-items-center
-          button.btn.btn-primary.btn-md(type='submit') Update profile
+    .row
+      .col-md-6.col-sm-12.text-center
+        form#user_add_avatar.form(method='POST' action='/users/me/avatar' enctype='multipart/form-data' )
+          .fileinput.fileinput-new.text-center(data-provides='fileinput')
+            .fileinput-new.thumbnail.img-circle.img-raised
+              img(src=`/img/users/${user.avatar}`, alt=`${user.name}`)
+            .fileinput-preview.fileinput-exists.thumbnail.img-circle.img-raised
+            div            
+              label.avatar-upload(for='avatar-upload')
+                input(type='file', name='avatar', accept='image/*', id='avatar-upload')
+          button.btn.btn-primary.btn-sm(type='submit') Update avatar
+      .col-md-6.col-sm-12.text-center
+        h4.title Update password
+    br
+    hr.border-default
+    .row
+      .col-md-12
+        form#userForm_update.js-validate(method='POST' action='/users/me?_method=PUT')
+          .container
+            h3.profile-title.text-left.text-default General Info
+            .row
+              .col-md-6
+                label.labels
+                  | Full Name
+                  span.text-danger *
+                input#name.form-control(type='text', name='name', value=`${user.name}`)
+              .col-md-6
+                .js-form-message.mb-6
+                  label.labels
+                    | Email address
+                    span.text-danger *
+                  input#email.form-control(type='email', name='email', value=`${user.email}`)        
+            br
+            .row
+              .col-md-6
+                label.labels
+                  | Company
+                input#company.form-control(type='text', name='company', value=`${user.company}`)
+              .col-md-6
+                label.labels
+                  | Phone
+                input#phone.form-control(type='text', name='phone', value=`${user.phone}`)
+            br
+            .row
+              .col-md-12
+                label.labels
+                  | Address
+                input#address.form-control(type='text', name='address', value=`${user.address}`)
+              //- .col-md-4
+              //-   label.labels
+              //-     | Postal code
+              //-   input#postcode.form-control(type='text', name='postcode', placeholder='00670')
+            br
+            .d-flex.justify-content-between.align-items-center
+              button.btn.btn-primary.btn-md(type='submit') Update profile

@@ -1,39 +1,31 @@
-.card.card-profile
-  .card-image.no-mask
-    h4.title= user.name
-    .dropdown
-      button.btn.btn-link.dropdown-toggle.btn-icon(type='button', data-toggle='dropdown', aria-expanded='false')
-        i.fas.fa-cog
-      .dropdown-menu.dropdown-menu-right(x-placement='bottom-end', style='position: absolute; transform: translate3d(-122px, 22px, 0px); top: 0px; left: 0px; will-change: transform;')
-        a.dropdown-item(href='javascript:;') Update Password
-        a.dropdown-item(href='javascript:;') Delete Profile
-    a(href='javascript:;')
-      img.img.img-raised.rounded(src=`/img/users/${user.avatar}`, alt=`${user.name}`)
-  .card-body
+.card.card-coin.mt-100
+  .card-header.mb-0
+    img.img-center.img-fluid.rounded-circle(src=`/img/users/${user.avatar}`, alt=`${user.name}`)
+    h4.title.text-1-6.mb-0= user.name
+    h6.job-title.text-default.text-company= user.company
     hr.line-primary
-    h3.job-title.text-primary= user.name
-    h5.job-title.text-primary= user.company
+  .card-body  
     .table-responsive
       table#plain-table.table.tablesorter
         tbody
           tr
             td.text-left
-              i.fas.fa-envelope
+              i.fas.fa-envelope.mr-2
               |  Email
             td.text-right= user.email
           tr
             td.text-left
-              i.fas.fa-mobile
+              i.fas.fa-mobile.mr-2
               |  Phone
             td.text-right= user.phone
           tr
             td.text-left
-              i.fas.fa-map-marker-alt
+              i.fas.fa-map-marker-alt.mr-2
               |  Address
             td.text-right= user.address
           tr
             td.text-left
-              i.fas.fa-tag
+              i.fas.fa-tag.mr-2
               |  Status
             if user.isAdmin
               td.text-right Admin

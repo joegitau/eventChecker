@@ -4,7 +4,6 @@ block content
     .container
       .row.align-items-center.py-4
         .col-lg-6.col-7
-          //- h4.text-primary.d-inline-block.mb-0 Event
           nav.d-none.d-md-inline-block.ml-md-4(aria-label='breadcrumb')
             ol.breadcrumb.breadcrumb-links.breadcrumb-dark
               li.breadcrumb-item
@@ -14,15 +13,15 @@ block content
                 a(href='/users/me') My Events
               li.breadcrumb-item.active(aria-current='page') Event
         .col-lg-6.col-5.text-right
-          a.btn.btn-sm.btn-default(href=`/events/${event._id}/new-guest`) Add Guest
-          a.btn.btn-sm.btn-default(href=`/events/${event._id}/update-event`) Edit Event
+          a.btn.btn-sm.btn-primary(href=`/events/${event._id}/new-guest`) Add Guest
+          a.btn.btn-sm.btn-primary(href=`/events/${event._id}/update-event`) Edit Event
       .row
         .col-md-3.col-sm-12
-          .card.card-pricing.card-event
+          .card.card-pricing.card-event.mt-0
             .card-header
               .card-image.no-mask
                 a(href='javascript:;')
-                  img.img(src='/img/comete-coco.jpg')
+                  img(src=`/img/events/${event.coverImg}`, alt=`${event.name}`)
             .card-body
               h6 Title
               h4= event.title
@@ -42,15 +41,16 @@ block content
                     if guests.length >= 0
                       h4= `${guests.length} guests`
                     else 
-                      h4 0 guests                
+                      h4 
+                        | 0 guests                
                 li
                   h6 Checked In Guests 
-                  if guests.isArrived >= 0
+                  if guests.isArrived === 'ARRIVED'
                     h4= `${guests.isArrived} checked In`
                   else
                     h4 0 checked In
         .col-md-9.col-sm-12
-          .card
+          .card.mt-0
             .card-header.border-bottom.pb--1
               .row
                 .col-lg-6
@@ -85,10 +85,18 @@ block content
                   tbody
                     each guest in guests
                       tr.text-primary
-                        if guest.isArrived
-                          td.text-center Checked In
-                        else 
-                          td.text-center Absent
+                        if guest.isArrived === 'ARRIVED'
+                          td.text-center
+                            .bootstrap-tagsinput
+                              span.tag.badge.badge-danger
+                                | ARRIVED
+                                span(data-role='remove')  
+                        else
+                          td.text-center
+                            .bootstrap-tagsinput
+                              span.tag.badge.badge-default
+                                | ABSENT
+                                span(data-role='remove')                  
                         td.text-center
                           a(href=`/events/${event._id}/guest/${guest._id}`)= guest.name
                         td.text-center= guest.email
@@ -99,10 +107,11 @@ block content
                         else
                           td.text-center Guest
                         td.text-right
-                          a(href=`/events/${event._id}/guest/${guest._id}`)
+                          a.mr-2(href=`/events/${event._id}/guest/${guest._id}`)
                             i.fas.fa-eye
-                          a(href='/')
-                            i.fas.fa-trash
+                          form.form(method='POST' action=`/events/${event._id}/guest/${guest._id}?_method=DELETE`)
+                            button.btn.btn-link.btn-plain.btn-sm.btn-icon(type='submit' rel='tooltip' data-original-title='Delete event')
+                              i.fas.fa-trash
                         
 
 

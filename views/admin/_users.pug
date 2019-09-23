@@ -29,7 +29,7 @@
                 a(href='')= user.name
               td.text-center
                 .photo
-                  img(src="/img/tania.jpg" alt=`${user.name}`)
+                  img(src=`/img/users/${user.avatar}` alt=`${user.name}`)
               td.text-center= user.company
               td.text-center= user.email
               td.text-center= user.phone
@@ -40,5 +40,5 @@
               td.text-right
                 a(href=`/users/${user._id}`)
                   i.fas.fa-eye
-                button.btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='Delete user')
-                  i.fas-fa-trash
+                button.btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='Delete user' onclick='deleteUser(this)')
+                  i.fas.fa-trash

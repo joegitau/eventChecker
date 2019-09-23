@@ -1,4 +1,3 @@
-const bodyParser = require("body-parser");
 const BaseJoi = require("@hapi/joi");
 const Extension = require("@hapi/joi-date");
 const Joi = BaseJoi.extend(Extension);
@@ -6,13 +5,13 @@ Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
 
 const router = express.Router();
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const auth = require("../middleware/auth");
 const Guest = require("../models/Guest");
 const Event = require("../models/Event");
 
-router.post("/", urlencodedParser, auth, async function(req, res) {
+// create guest
+router.post("/", auth, async function(req, res) {
   const schema = {
     name: Joi.string().required(),
     email: Joi.string()
@@ -24,10 +23,12 @@ router.post("/", urlencodedParser, auth, async function(req, res) {
     address: Joi.string(),
     company: Joi.string(),
     eventId: Joi.objectId(),
-    isArrived: Joi.boolean()
+    isVip: Joi.string(),
+    isArrived: Joi.string()
   };
   const { error } = Joi.validate(req.body, schema);
-  if (error) return res.status(400).send(error.details[0].message);
+  // if (error) return res.status(400).send(error.details[0].message);
+  if (error) return req.flash("danger", `${error.details[0].message}`);
 
   try {
     const event = await Event.findById(req.body.eventId);
@@ -35,13 +36,17 @@ router.post("/", urlencodedParser, auth, async function(req, res) {
     const guest = new Guest({ ...req.body, eventId: event._id });
 
     await guest.save();
-    // res.status(201).send(guest);
+
+    req.flash("primary", "Guest successfully added.");
     res.status(201).redirect("/events");
   } catch (err) {
-    res.status(401).send({ error: err.message });
+    console.log(err.message);
+    req.flash("danger", `${err.message}`);
+    res.status(401).redirect("back");
   }
 });
 
+// get guest
 router.get("/:id", auth, async (req, res) => {
   try {
     const guests = await Guest.find({ eventId: req.event._id }).sort("-name");
@@ -52,23 +57,17 @@ router.get("/:id", auth, async (req, res) => {
       "eventId",
       "title venue eventDate eventTime duration capacity -_id"
     );
-    if (!guest) return res.status(400).send("Guest with given ID not found");
+    if (!guest) {
+      req.flash("danger", "Guest with given ID cannot be found");
+      return res.status(400).redirect("back");
+    }
 
     res.status(200).render("guest", { guest, guests });
   } catch (err) {
-    res.status(401).send({ errror: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).render("not-found", { error: err.message });
   }
 });
-
-// fetch all guests
-// router.get("/", auth, async (req, res) => {
-//   try {
-//     await req.event.populate("guests").execPopulate();
-//     res.send(req.event.guests);
-//   } catch (err) {
-//     res.status(401).send("No Guests found");
-//   }
-// });
 
 // filter guests depending on arrival status
 router.get("/", auth, async (req, res) => {

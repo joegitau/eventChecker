@@ -1,0 +1,9 @@
+.messages
+  each type in Object.keys(messages)
+    each message in messages[type]
+      div(class=`alert alert-${type} alert-with-icon`) 
+        button.close(type='button', aria-hidden='true', data-dismiss='alert', aria-label='Close')
+          i.fas.fa-times.icon-simple-remove
+        span
+          i.fas.fa-bell.mr-2
+          b= message

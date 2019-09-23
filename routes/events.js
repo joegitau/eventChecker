@@ -1,4 +1,3 @@
-const bodyParser = require("body-parser");
 const sharp = require("sharp");
 const multer = require("multer");
 const BaseJoi = require("@hapi/joi");
@@ -8,7 +7,6 @@ Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
 
 const router = express.Router();
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const auth = require("../middleware/auth");
 const Event = require("../models/Event");
@@ -16,32 +14,44 @@ const User = require("../models/User");
 const Guest = require("../models/Guest");
 
 // create event
-router.post("/", urlencodedParser, auth, async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const schema = {
-    title: Joi.string().required(),
-    venue: Joi.string().required(),
+    title: Joi.string()
+      .required()
+      .error(errors => new Error("Title field is required")),
+    venue: Joi.string()
+      .required()
+      .error(errors => new Error("Venue field is required")),
     eventDate: Joi.date()
+      .required()
       .format("DD.MM.YYYY")
-      .raw()
-      .required(),
-    eventTime: Joi.string().required(),
-    duration: Joi.number().required(),
+      .error(errors => new Error("Date field is required")),
+    eventTime: Joi.string()
+      .required()
+      .error(errors => new Error("Event Time field is required")),
+    address: Joi.string(),
+    duration: Joi.number()
+      .required()
+      .error(errors => new Error("Event Duration field is required")),
     description: Joi.string()
   };
 
   const { error } = Joi.validate(req.body, schema);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return req.flash("danger", `${error.details[0].message}`);
 
   try {
     const event = new Event({
       ...req.body,
       creator: req.user._id
     });
+
     await event.save();
-    // res.status(201).send(event);
-    res.status(201).redirect("/users/me");
+
+    req.flash("primary", "Event successfully added.");
+    res.status(201).redirect("/events");
   } catch (err) {
-    res.status(400).send({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).redirect("back");
   }
 });
 
@@ -59,9 +69,9 @@ router.get("/", auth, async (req, res) => {
       .execPopulate();
 
     res.status(200).render("events", { events: req.user.events });
-    // res.status(200).send(req.user.events);
   } catch (err) {
-    res.status(400).send({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(400).render("not-found", { error: err.message });
   }
 });
 
@@ -72,18 +82,21 @@ router.get("/:id", auth, async (req, res) => {
       _id: req.params.id,
       creator: req.user._id
     });
-    if (!event) return res.status(400).send("Event with given ID not found");
+    if (!event) {
+      req.flash("danger", "Event with given ID cannot be found");
+      return res.status(400).redirect("back");
+    }
 
     const guests = await Guest.find({ eventId: event._id }).sort("-name");
 
     res.status(200).render("event", { event, guests });
-    // res.status(200).send(event);
   } catch (err) {
-    res.status(400).send({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(401).render("not-foun", { error: err.message });
   }
 });
 
-// create new guest
+// render new guest
 router.get("/:id/new-guest", auth, async (req, res) => {
   try {
     const events = await Event.find({ creator: req.user._id }).sort(
@@ -93,7 +106,8 @@ router.get("/:id/new-guest", auth, async (req, res) => {
     const event = await Event.findOne({ _id: req.params.id });
     res.status(200).render("new-guest", { event, events });
   } catch (err) {
-    res.status(401).render({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(400).render("not-found", { error: err.message });
   }
 });
 
@@ -108,22 +122,98 @@ router.get("/:id/guest/:guestId", auth, async (req, res) => {
       eventId: req.params.id
     });
 
+    if (!guest) {
+      req.flash("danger", "Guest with given ID cannot be found");
+      return res.redirect("back");
+    }
+
     res.status(200).render("guest", { guest, event, user });
   } catch (err) {
-    res.status(401).render({ error: err.message });
+    req.flash("danger", `${err.message}`);
+    res.status(400).render("not-found", { error: err.message });
+  }
+});
+
+// update guest
+router.put("/:id/guest/:guestId", auth, async (req, res) => {
+  try {
+    const event = await Event.findOne({ _id: req.params.id });
+
+    const guest = await Guest.findOneAndUpdate(
+      {
+        _id: req.params.guestId,
+        eventId: req.params.id
+      },
+      req.body,
+      { new: true }
+    );
+
+    req.flash("primary", "Guest successfully updated.");
+    res.status(200).redirect("back");
+  } catch (err) {
+    req.flash("danger", `${err.message}`);
+    res.status(400).render("not-found", { error: err.message });
+  }
+});
+
+// delete guest
+router.delete("/:id/guest/:guestId", auth, async (req, res) => {
+  try {
+    const event = await Event.findOne({ _id: req.params.id });
+
+    const guest = await Guest.findOneAndDelete({
+      _id: req.params.guestId,
+      eventId: req.params.id
+    });
+
+    if (!guest) {
+      req.flash("danger", "Guest with given ID cannot be found");
+      return res.status(401).redirect("back");
+    }
+
+    req.flash("primary", "Guest successfully deleted.");
+    res.status(200).redirect("back");
+  } catch (err) {
+    req.flash("danger", `${err.message}`);
+    res.status(400).render("not-found", { error: err.message });
   }
 });
 
 // cover image
-const coverImg = multer({
-  options: {
-    limits: 2000000
-  },
-  fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpg|jpeg|png|pdf)/))
-      cb(new Error("File type must either be: JPG, JPEG, PNG or PDF"));
+// strorage
+const multerStorage = multer.memoryStorage();
 
-    cb(undefined, true);
+// filters
+const multerFilter = (req, file, cb) => {
+  if (!file.originalname.match(/\.(jpg|jpeg|png)$/))
+    cb(new Error("Image must be either be of type: JPG, JPEG, or PNG"));
+
+  cb(undefined, true);
+};
+
+const coverImg = multer({
+  limits: { fileSize: 2000000 },
+  storage: multerStorage,
+  fileFilter: multerFilter
+});
+
+// render upload and update page
+router.get("/:id/update-event", auth, async (req, res) => {
+  try {
+    const event = await Event.findOne({
+      _id: req.params.id,
+      creator: req.user._id
+    });
+
+    if (!event) {
+      req.flash("danger", "Event with given ID cannot be found");
+      return res.status(401).redirect("back");
+    }
+
+    res.status(200).render("update-event", { event });
+  } catch (err) {
+    req.flash("danger", `${err.message}`);
+    res.status(400).send({ error: err.message });
   }
 });
 
@@ -134,21 +224,28 @@ router.post(
   coverImg.single("coverImg"),
   async (req, res) => {
     try {
-      const buffer = await sharp(req.file.buffer)
-        .png()
-        .resize({ width: 800, height: 640 })
-        .toBuffer();
-      req.event.coverImg = buffer;
+      req.file.filename = `event-${req.event.id}-${Date.now()}.jpeg`;
+
+      sharp(req.file.buffer)
+        .resize(800, 800)
+        .toFormat("jpeg")
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/events/${req.file.filename}`);
+
+      req.event.coverImg = req.file.filename;
+
       await req.event.save();
-      res
-        .status(201)
-        .send({ success: "Cover image created/ updated successfully" });
+
+      req.flash("primary", "Event Cover Image added.");
+      res.status(201).redirect("back");
     } catch (err) {
-      res.status(400).send({ error: err.message });
+      req.flash("danger", `${err.message}`);
+      res.status(400).redirect("back");
     }
   },
   (error, req, res, next) => {
-    res.status(400).send({ error: error.message });
+    req.flash("danger", `${error.message}`);
+    res.status(400).redirect("back");
   }
 );
 
@@ -158,10 +255,12 @@ router.get("/:id/coverImg", async (req, res) => {
     const event = await Event.findById(req.params.id);
     if (!event || !event.coverImg) throw new Error();
 
-    res.set("Content-Type", "image/png");
+    res.set("Content-Type", "image/jpeg");
+
     res.status(200).send();
   } catch (err) {
-    res.status(400).send({ error: err.message });
+    req.flash("danger", `${error.message}`);
+    res.status(400).render("not-found", { error: err.message });
   }
 });
 
@@ -170,34 +269,42 @@ router.delete("/:id/coverImg", async (req, res) => {
   try {
     req.event.coverImg = undefined;
     await req.event.save();
-    res.status(200).send({ success: "Event cover image successfully deleted" });
+
+    req.flash("primary", "Event Cover image deleted.");
+    res.status(200).redirect("/events");
   } catch (err) {
-    res.status(400).send({ error: error.message });
+    req.flash("danger", `${err.message}`);
+    res.status(400).render("not-found", { error: err.message });
   }
 });
 
 // update event
-router.put("/", auth, async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const schema = {
     title: Joi.string(),
     venue: Joi.string(),
-    eventDate: Joi.date().format("YYYY-MM-DD"),
+    eventDate: Joi.date().format("DD.MM.YYYY"),
     eventTime: Joi.string(),
+    address: Joi.string(),
     duration: Joi.number(),
     description: Joi.string()
   };
 
   const { error } = Joi.validate(req.body, schema);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return req.flash("danger", `${error.details[0].message}`);
+
   try {
     const event = await Event.findOneAndUpdate(
       { _id: req.params.id, creator: req.user._id },
       req.body,
       { new: true }
     );
-    res.status(200).send(event);
+
+    req.flash("primary", "Event successfully updated.");
+    res.status(201).redirect("back");
   } catch (err) {
-    res.status(400).send("Event not updated");
+    req.flash("danger", `${err.message}`);
+    res.status(401).redirect("back");
   }
 });
 
@@ -208,10 +315,17 @@ router.delete("/:id", auth, async (req, res) => {
       _id: req.params.id,
       creator: req.user._id
     });
-    if (!event) return res.status(400).send("Event with given ID not found");
-    res.status(200).send(event);
+
+    if (!event) {
+      req.flash("danger", "Event with given ID cannot be found");
+      return res.status(401).redirect("back");
+    }
+
+    req.flash("primary", "Event successfully deleted.");
+    res.status(200).redirect("/events");
   } catch (err) {
-    res.status(400).send("Event not deleted");
+    req.flash("danger", `${err.message}`);
+    res.status(401).redirect("back");
   }
 });
 

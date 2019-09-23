@@ -40,6 +40,6 @@ block content
         .col-lg-4
           include user/_card
           br
-          .form#user_delete.mb-3
-            button.btn.btn-simple.btn-lg Delete Profile
+          input(type="hidden" name='userId' value=`${user._id}`)
+          button.btn.btn-simple.btn-lg(type='button' onclick='deleteUser(this)') Delete Profile
 
