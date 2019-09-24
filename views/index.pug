@@ -2,24 +2,18 @@ extends base
 block content 
   .header.header-5
     .page-header
+      img.path(src='/img/ptrn.png')
       .container
-        .row.align-items-center.mt-md-5
-          .col-lg-6.col-md-8.ml-auto.mr-auto
+        .row.row-grid.justify-content-between.align-items-center.text-left
+          .col-md-5.col-sm-12-px-0.ml-auto.mr-auto
             .logo
               .logo-image
-                img(src='/img/events.png')
-            h2.title.text-left Easily create EVENT TAGS for your guests.
-            p= users
-            .input-group
-              input.form-control(type='text' placeholder="sign up now")
-              .input-group-append
-                span.input-group-text
-                  i.tim-icons.icon-lock-circle
-            a.btn.btn-info.btn-simple.btn-icon(href='')
-              i.tim-icons.icon-send
-          .col-lg-4.ml-auto.text-center
-            .event-container
-              img.event(src='/img/events-badge.png')
-            img.shape(src='/img/patrat.png')
-            img.shape2(src='/img/cercuri.png')
-            img.shape3(src='/img/waves.png')
+                img(src='/img/creative-tim-white-slim2.png')
+            h2.title.text-left.text-white
+              | An INSTANT solution to help you swiftly CHECKIN GUESTS at your events and subsequently, TAG them as they arrive.
+            a.mt-3.btn.btn-neutral.btn-plain(href='/register')
+              i.fas.fa-file-signature.mr-3
+              |  Start Managing your Events         
+          .col-md-7.col-sm-12
+            .image-container
+              img.img-xtra(src='/img/ipad-checklist-mockup.png', alt='Events checklist')

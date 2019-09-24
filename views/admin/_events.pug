@@ -2,11 +2,9 @@
   .card-body
     h3.profile-title.text-left All Events
     .table-responsive
-      table.table.table-hover.table-striped
+      table#eventsDataTable.table.table-hover.table-striped.dataTable.dtr-inline
         thead.text-primary
           tr
-            //- th.text-center
-            //-   | #
             th.text-center
               | Image
             th
@@ -24,10 +22,9 @@
         tbody
           each event in events
             tr.text-primary
-              //- td.text-center= event._id
               td.text-center
                 .photo
-                  img(src="/img/tania.jpg" alt=`${event.title}`)
+                  img(src=`/img/events/${event.coverImg}` alt=`${event.title}`)
               td.text-center
                 a(href=`/event/${event._id}`)= event.title                      
               td.text-center= event.venue
@@ -35,7 +32,8 @@
               td.text-center= event.eventTime
               td.text-center= event.duration
               td.text-right
-                a(href=`/event/${event._id}`).btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='View event')
+                a(href=`/event/${event._id}`).btn.btn-link.btn-sm.mr-2(type='button' rel='tooltip' data-original-title='View event')
                   i.fas.fa-eye
-                button.btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='Delete event')
-                  i.fas-fa-trash
+                form.form(method='POST' action=`/events/${event._id}?_method=DELETE`)
+                  button.btn.btn-link.btn-plain.btn-sm.btn-icon(type='submit' rel='tooltip' data-original-title='Delete event')
+                    i.fas.fa-trash

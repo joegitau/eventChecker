@@ -1,7 +1,7 @@
 {
-  "name": "events",
+  "name": "eventstag",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple application to checkin guests at an event while subsequently tagging them as they arrive.",
   "main": "index.js",
   "jest": {
     "testEnvironment": "node"
@@ -9,12 +9,10 @@
   "scripts": {
     "start": "node index.js",
     "dev": "env-cmd -f ./config/dev.env nodemon index.js",
-    "test": "env-cmd -f ./config/test.env jest --watch",
-    "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
-    "build:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
+    "test": "env-cmd -f ./config/test.env jest --watch"
   },
   "keywords": [],
-  "author": "",
+  "author": "Joseph Gitau",
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^15.1.1",

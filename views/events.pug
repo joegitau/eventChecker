@@ -17,19 +17,9 @@ block content
       .row.align-items-center
         .col-lg-12.mx-auto
           .card
-            .card-header.border-bottom.pb--1
-              .row
-                .col-lg-6
-                  form#search_events.form-inline.mr-sm-3
-                    .form-group.mb-0
-                      .input-group.input-group-alternative.input-group-merge
-                        .input-group-prepend
-                          span.input-group-text
-                            i.fas.fa-search
-                        input.form-control(placeholder='Search events...', type='text')
             .card-body
               .table-responsive
-                table.table.table-hover.table-striped
+                table#eventsDataTable.table.table-hover.table-striped.dataTable.dtr-inline
                   thead.text-primary
                     tr
                       //- th.text-center
@@ -62,6 +52,8 @@ block content
                         td.text-center= event.eventTime
                         td.text-center= event.duration
                         td.text-right
+                          a.mr-2(href=`/events/${event._id}` rel='tooltip' data-original-title='View event')
+                            i.fas.fa-eye
                           form.form(method='POST' action=`/events/${event._id}?_method=DELETE`)
                             button.btn.btn-link.btn-plain.btn-sm.btn-icon(type='submit' rel='tooltip' data-original-title='Delete event')
                               i.fas.fa-trash

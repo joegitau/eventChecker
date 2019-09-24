@@ -41,7 +41,7 @@ const guestSchema = new mongoose.Schema(
       default: "ABSENT",
       validate: {
         validator: function(v) {
-          if (v !== "ARRIVED" || V !== "ABSENT") {
+          if (v !== "ARRIVED" || v !== "ABSENT") {
             return;
           }
         },

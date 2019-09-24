@@ -61,7 +61,7 @@ block content
         .col-lg-5.col-md-6.ml-auto.mr-auto
           .card.card-badge
             .card-body.p-0
-              .badge-content
+              .badge-content#badgeContent
                 .col__3
                   h4.vertical-text= user.company.split(' ')[0]
                 .col__9
@@ -80,5 +80,6 @@ block content
                       tr
                         td.p-0
                           h4.event_date= event.eventDate
+          button#printBadge.btn.btn-primary.btn-lg.mt-4(type='submit') Print Badge
 
 

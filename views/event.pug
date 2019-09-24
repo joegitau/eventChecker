@@ -10,7 +10,9 @@ block content
                 a(href='/')
                   i.fas.fa-home
               li.breadcrumb-item
-                a(href='/users/me') My Events
+                a(href='/users/me') My Profile
+              li.breadcrumb-item
+                a(href='/events') My Events
               li.breadcrumb-item.active(aria-current='page') Event
         .col-lg-6.col-5.text-right
           a.btn.btn-sm.btn-primary(href=`/events/${event._id}/new-guest`) Add Guest
@@ -51,21 +53,9 @@ block content
                     h4 0 checked In
         .col-md-9.col-sm-12
           .card.mt-0
-            .card-header.border-bottom.pb--1
-              .row
-                .col-lg-6
-                  form#search_guests.form-inline.mr-sm-3
-                    .form-group.mb-0
-                      .input-group.input-group-alternative.input-group-merge
-                        .input-group-prepend
-                          span.input-group-text
-                            i.fas.fa-search
-                        input.form-control(placeholder='Search guests...', type='text')
-                .col-lg-6
-                  | Other filters
             .card-body
               .table-responsive
-                table.table.table-hover.table-striped
+                table#guestsDataTable.table.table-hover.table-striped.dataTable.dtr-inline
                   thead.text-primary
                     tr
                       th.text-center
@@ -107,10 +97,10 @@ block content
                         else
                           td.text-center Guest
                         td.text-right
-                          a.mr-2(href=`/events/${event._id}/guest/${guest._id}`)
+                          a.mr-2(href=`/events/${event._id}/guest/${guest._id}` rel='tooltip' data-original-title='View guest')
                             i.fas.fa-eye
                           form.form(method='POST' action=`/events/${event._id}/guest/${guest._id}?_method=DELETE`)
-                            button.btn.btn-link.btn-plain.btn-sm.btn-icon(type='submit' rel='tooltip' data-original-title='Delete event')
+                            button.btn.btn-link.btn-plain.btn-sm.btn-icon(type='submit' rel='tooltip' data-original-title='Delete guest')
                               i.fas.fa-trash
                         
 

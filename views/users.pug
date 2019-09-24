@@ -9,7 +9,7 @@ block content
         .col-lg-12.mx-auto
           .card-body
             .table-responsive
-              table.table.table-hover.table-striped
+              table#usersDataTable.table.table-hover.table-striped.dataTable.dtr-inline
                 thead.text-primary
                   tr
                     th.text-center
@@ -33,10 +33,10 @@ block content
                     tr.text-primary
                       td.text-center= user._id
                       td.text-center
-                        a(href='')= user.name
+                        a(href=`/admin/users/${user._id}`)= user.name
                       td.text-center
                         .photo
-                          img(src="/img/tania.jpg" alt=`${user.name}`)
+                          img(src=`/img/users/${user.avatar}` alt=`${user.name}`)
                       td.text-center= user.company
                       td.text-center= user.email
                       td.text-center= user.phone
@@ -45,8 +45,9 @@ block content
                       else
                         td.text-center User
                       td.text-right
-                        a(href=`users/${user._id}`)
+                        a(href=`/admin/users/${user._id}` rel='tooltip' data-original-title='view user')
                           i.fas.fa-eye
-                        button.btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='Delete user')
-                          i.fas-fa-trash
+                        form.form(method='POST' action=`/admin/users/${user._id}?_method=DELETE`)
+                          button.btn.btn-link.btn-plain.btn-sm.btn-icon(type='submit' rel='tooltip' data-original-title='Delete user')
+                            i.fas.fa-trash
                         

@@ -16,9 +16,9 @@ nav.navbar.navbar-expand-lg.bg-transparent.navbar-absolute
             button.navbar-toggler(type='button' data-toggle='collapse' data-target='#example-header-5' aria-controls='navigation-index' aria-expanded='false' aria-label='Toggle navigation')
               i.fas.fa-times
       ul.navbar-nav.ml-auto
-        li.nav-item.active
-          a.nav-link(href='/')
-            | Home
+        //- li.nav-item.active
+        //-   a.nav-link(href='/')
+        //-     | Home
         li.nav-item
           a.nav-link(href='/about')
             | About
@@ -34,7 +34,7 @@ nav.navbar.navbar-expand-lg.bg-transparent.navbar-absolute
                 li.nav-link
                   a.nav-item.dropdown-item(href='/users/me/new-event') Create new Event
                 li.nav-link
-                  a.nav-item.dropdown-item(href='/users/me') View all My Events
+                  a.nav-item.dropdown-item(href='/events') View all My Events
             li.dropdown.nav-item
               a.dropdown-toggle.nav-link(href='#', data-toggle='dropdown')
                 h4.text-default.mr-3= user.name.split(' ')[0]

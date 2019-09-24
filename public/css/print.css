@@ -1,0 +1,91 @@
+@media print {
+  .badge-content {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .col__2 {
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+    padding: 25px 0;
+  }
+
+  .col__3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+    padding: 25px 0;
+  }
+
+  .col__9 {
+    flex: 0 0 75%;
+    max-width: 75%;
+    /* background: #0a0a47 url("/public/img/badge-ptrn.png") top right; */
+    background: #0a0a47 url("../img/dots.png") top right;
+  }
+
+  .col__10 {
+    flex: 0 0 83.333333%;
+    max-width: 83.333333%;
+    background: #0a0a47;
+    background: #0a0a47 url("../img/dots.png") top right;
+    /* background: #0a0a47 url("/public/img/badge-ptrn.png") top right; */
+  }
+
+  .vertical-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: 5rem;
+    font-weight: 900;
+    margin-left: 0;
+    margin-top: -20%;
+    color: rgba(223, 223, 250, 0.35) !important;
+  }
+
+  h2.role {
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: 4rem;
+    font-weight: 900;
+    margin-left: -5px;
+    margin-bottom: 15px !important;
+    padding-top: 25px;
+    color: #fff !important;
+  }
+
+  h3.fname {
+    color: #fff !important;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    text-align: center;
+    margin: 5px 0px;
+  }
+
+  h5.lname {
+    color: #fff !important;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-weight: 400;
+    font-size: 1.2rem;
+    text-align: left !important;
+    margin-top: 5px;
+  }
+
+  h6.company {
+    text-transform: lowercase;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  h4.event_date {
+    color: #fff !important;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    text-align: center;
+    margin: 15px 0 !important;
+  }
+}

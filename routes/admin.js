@@ -1,19 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const bodyParser = require("body-parser");
-
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const admin = require("../middleware/admin");
-const auth = require("../middleware/auth");
 const User = require("../models/User");
 const Event = require("../models/Event");
-const Guest = require("../models/Guest");
 
 // get All users
 router.get("/users", admin, async (req, res) => {
   try {
-    const users = await User.find().sort("name");
+    const users = await User.find().sort("-name");
     if (!users) {
       res
         .status(403)
@@ -26,8 +21,8 @@ router.get("/users", admin, async (req, res) => {
   }
 });
 
-// // get user
-router.get("/users/:id", async (req, res) => {
+// get user
+router.get("/users/:id", admin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) throw new Error();
@@ -36,6 +31,42 @@ router.get("/users/:id", async (req, res) => {
     res.status(200).render("user", { user, events });
   } catch (err) {
     res.status(404).render("not-found", { error: err.message });
+  }
+});
+
+// delete user
+router.delete("/users/:id", admin, async (req, res) => {
+  try {
+    const user = await User.findByIdAndRemove(req.params.id);
+    if (!user) {
+      req.flash("danger", `${err.message}`);
+      res
+        .status(401)
+        .render("not-found", { error: "User with given ID cannot be found" });
+    }
+
+    req.flash("primary", "User profile successfully deleted");
+    res.status(200).redirect("back");
+  } catch (err) {
+    req.flash("danger", `${err.message}`);
+    res.status(404).render("not-found", { error: err.message });
+  }
+});
+
+// get all events
+router.get("/events", admin, async () => {
+  try {
+    const events = await Event.find().sort("-createdAt");
+
+    if (!events) {
+      req.flash("danger", `${err.message}`);
+      res.status(401).render("not-found", { error: "No events found" });
+    }
+
+    res.status(200).render("events", { events });
+  } catch (err) {
+    req.flash("danger", `${err.message}`);
+    res.status(401).render("not-found", { error: err.message });
   }
 });
 

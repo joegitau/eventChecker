@@ -4,23 +4,20 @@ head
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
   meta(http-equiv='X-UA-Compatible' content='ie=edge')
   link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Livvic:400,700&display=swap')
-  link(href='https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap', rel='stylesheet')
-  link(href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet')
+  link(href='https://use.fontawesome.com/releases/v5.6.3/css/all.css' rel='stylesheet')
   link(rel='stylesheet', href="/css/app.min.css")
   link(rel='stylesheet', href="/css/custom.css")
   title Eventstag
 body
   include partials/_header
-  .row.align-items-center.py-4
-    .col-md-6.ml-auto.mr-auto
-      != messages('partials/_messages', locals)
-      if errors
-        each error, i in errors
-          div(class=`alert alert-danger alert-with-icon`) 
-            button.close(type='button', aria-hidden='true', data-dismiss='alert', aria-label='Close')
-              i.fas.fa-times.icon-simple-remove
-            span
-              i.fas.alarm.mr-2
-              b= error.details[0].message
+  != messages('partials/_messages', locals)
+  if errors
+    each error, i in errors
+      div(class=`alert alert-danger alert-with-icon`) 
+        button.close(type='button', aria-hidden='true', data-dismiss='alert', aria-label='Close')
+          i.fas.fa-times.icon-simple-remove
+        span
+          i.fas.alarm.mr-2
+          b= error.details[0].message
   block content
   include partials/_footer
