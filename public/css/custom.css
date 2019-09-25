@@ -5,6 +5,11 @@ body {
   color: #525f7f !important;
 }
 
+.page-header.page-header-small {
+  min-height: 72vh;
+  max-height: 440px;
+}
+
 .header-5 {
   background: #5e72e4 !important;
   /* background-image: url("../img/badge-ptrn.png"); */
@@ -29,7 +34,7 @@ body {
 }
 
 .navbar .navbar-nav .nav-item .nav-link {
-  color: #32325d !important;
+  color: #0a0a47 !important;
   font-size: 1rem !important;
 }
 

@@ -22,7 +22,6 @@
   .col__9 {
     flex: 0 0 75%;
     max-width: 75%;
-    /* background: #0a0a47 url("/public/img/badge-ptrn.png") top right; */
     background: #0a0a47 url("../img/dots.png") top right;
   }
 
@@ -31,7 +30,6 @@
     max-width: 83.333333%;
     background: #0a0a47;
     background: #0a0a47 url("../img/dots.png") top right;
-    /* background: #0a0a47 url("/public/img/badge-ptrn.png") top right; */
   }
 
   .vertical-text {

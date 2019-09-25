@@ -23,15 +23,16 @@ const guestSchema = new mongoose.Schema(
     company: String,
     isVip: {
       type: String,
-      enum: ["guest", "vip", "staff"],
-      default: "guest",
+      enum: ["GUEST", "VIP", "STAFF"],
+      default: "GUEST",
+      uppercase: true,
       validate: {
         validator: function(v) {
-          if (v !== "guest" || v !== "vip" || v !== "staff") {
+          if (v !== "GUEST" || v !== "VIP" || v !== "STAFF") {
             return;
           }
         },
-        message: "Status must either be, guest, vip or staff"
+        message: "Status must either be, GUEST, VIP or STAFF"
       }
     },
     isArrived: {

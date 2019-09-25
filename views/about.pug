@@ -1,8 +1,79 @@
 extend base
 block content
-  .section
-    .container
-      .row
-        .col-sm-12
-          h4.title
-            | About Us
+  section.section.header-5
+    .page-header.page-header-small
+      img.path(src='/img/ptrn-left.png')
+      .container
+        .row.row-grid.justify-content-between
+          .col-md-5.mt-lg-5
+            .row
+              .col-lg-6.col-sm-12.px-2.py-2
+                .card.card-stats
+                  .card-body
+                    .row
+                      .col-5.col-md-4
+                        .icon-big.text-center.icon-warning
+                          i.fas.fa-clipboard-list.text-default
+                      .col-7.col-md-8
+                        .numbers
+                          p.card-title.text-primary
+                            | EVENT
+                          p
+                          p.card-category.text-default Mangement
+              .col-lg-6.col-sm-12.px-2.py-2
+                .card.card-stats.upper.bg-default
+                  .card-body
+                    .row
+                      .col-5.col-md-4
+                        .icon-big.text-center.icon-warning
+                          i.fas.fa-users.text-default
+                      .col-7.col-md-8
+                        .numbers
+                          p.card-title.text-primary
+                            | GUEST
+                          p
+                          p.card-category.text-default Checkin
+            .row
+              .col-lg-6.col-sm-12.px-2.py-2
+                .card.card-stats
+                  .card-body
+                    .row
+                      .col-5.col-md-4
+                        .icon-big.text-center.icon-warning.text-primary
+                          i.fas.fa-tag.text-default
+                      .col-7.col-md-8
+                        .numbers
+                          p.card-title.text-primary
+                            | GUEST
+                          p
+                          p.card-category.text-default Tagging
+              .col-lg-6.col-sm-12.px-2.py-2
+                .card.card-stats
+                  .card-body
+                    .row
+                      .col-5.col-md-4
+                        .icon-big.text-center.icon-warning
+                          i.fas.fa-chart-line.text-default
+                      .col-7.col-md-8
+                        .numbers
+                          p.card-title.text-primary
+                            | EVENT
+                          p
+                          p.card-category.text-default Reports
+          .col-md-6
+            .pl-md-5
+              h1
+                | EVENTSTAG.
+              p
+                | We aim to provide an alternative solution on how you as an Event Host can welcome and effectively Checkin guests at the various events that you or your company host.
+              p
+                | Our primary focus revolves around 3 entities involved in the Event Management process: 
+                ul
+                  li CHECKING IN GUESTS - Keep a record of guests that attended your events
+                  li GUEST TAGGING - Print out Guest, VIP and Staff Tags at your events
+                  li EVENT REPORTS - Export either PDF or XLS reports regarding all your events
+              p
+                | 
+              br
+              a.font-weight-bold.text-white.mt-5(href='/register')
+                | Ready to give your Guests a more professional welcoming?
