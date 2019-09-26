@@ -2,52 +2,60 @@ extend base
 block content
   .section
     .container
-      .row
+      .row.align-items-center.py-4
         .col-lg-12
-          h2.title All users
+          nav.d-none.d-md-inline-block.ml-md-4(aria-label='breadcrumb')
+            ol.breadcrumb.breadcrumb-links.breadcrumb-dark
+              li.breadcrumb-item
+                a(href='/')
+                  i.fas.fa-home
+              li.breadcrumb-item
+                a(href='/users/me') My Profile
+              li.breadcrumb-item.active(aria-current='page') All Users
       .row.align-items-center
         .col-lg-12.mx-auto
-          .card-body
-            .table-responsive
-              table#usersDataTable.table.table-hover.table-striped.dataTable.dtr-inline
-                thead.text-primary
-                  tr
-                    th.text-center
-                      | #
-                    th.text-center
-                      | Name
-                    th
-                      | Image
-                    th.text-center
-                      | Company
-                    th.text-center
-                      | Email
-                    th.text-center
-                      | Telephone
-                    th.text-center
-                      | Role
-                    th.text-right
-                      | Action
-                tbody
-                  each user in users
-                    tr.text-primary
-                      td.text-center= user._id
-                      td.text-center
-                        a(href=`/admin/users/${user._id}`)= user.name
-                      td.text-center
-                        .photo
-                          img(src=`/img/users/${user.avatar}` alt=`${user.name}`)
-                      td.text-center= user.company
-                      td.text-center= user.email
-                      td.text-center= user.phone
-                      if user.isAmin
-                        td.text-center Admin
-                      else
-                        td.text-center User
-                      td.text-right
-                        a(href=`/admin/users/${user._id}` rel='tooltip' data-original-title='view user')
-                          i.fas.fa-eye
-                        form.form(method='POST' action=`/admin/users/${user._id}?_method=DELETE`)
-                          button.btn.btn-link.btn-plain.btn-sm.btn-icon(type='submit' rel='tooltip' data-original-title='Delete user')
-                            i.fas.fa-trash
-                        
+          .card.mt-0
+            .card-body
+              .table-responsive
+                table#usersDataTable.table.table-hover.table-striped.dataTable.dtr-inline
+                  thead.text-primary
+                    tr
+                      th.text-center
+                        | #
+                      th.text-center
+                        | Name
+                      th
+                        | Image
+                      th.text-center
+                        | Company
+                      th.text-center
+                        | Email
+                      th.text-center
+                        | Telephone
+                      th.text-center
+                        | Role
+                      th.text-right
+                        | Action
+                  tbody
+                    each user in users
+                      tr.text-primary
+                        td.text-center= user._id
+                        td.text-center
+                          a(href=`/admin/users/${user._id}`)= user.name
+                        td.text-center
+                          .photo
+                            img(src=`/img/users/${user.avatar}` alt=`${user.name}`)
+                        td.text-center= user.company
+                        td.text-center= user.email
+                        td.text-center= user.phone
+                        if user.isAmin
+                          td.text-center Admin
+                        else
+                          td.text-center User
+                        td.text-right
+                          a(href=`/admin/users/${user._id}` rel='tooltip' data-original-title='view user')
+                            i.fas.fa-eye
+                          form.form(method='POST' action=`/admin/users/${user._id}?_method=DELETE`)
+                            button.btn.btn-link.btn-plain.btn-sm.btn-icon(type='submit' rel='tooltip' data-original-title='Delete user')
+                              i.fas.fa-trash
+                          

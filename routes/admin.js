@@ -1,18 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
+const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const User = require("../models/User");
 const Event = require("../models/Event");
 
 // get All users
-router.get("/users", admin, async (req, res) => {
+router.get("/users", auth, admin, async (req, res) => {
   try {
     const users = await User.find().sort("-name");
     if (!users) {
       res
         .status(403)
-        .render("404", { error: "Cannot access page. Page ONLy For ADMINS" });
+        .render("404", {
+          error: "Cannot access page. Page authorized for ADMINS only"
+        });
     }
 
     res.status(200).render("users", { users });
@@ -22,7 +25,7 @@ router.get("/users", admin, async (req, res) => {
 });
 
 // get user
-router.get("/users/:id", admin, async (req, res) => {
+router.get("/users/:id", auth, admin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) throw new Error();
@@ -35,7 +38,7 @@ router.get("/users/:id", admin, async (req, res) => {
 });
 
 // delete user
-router.delete("/users/:id", admin, async (req, res) => {
+router.delete("/users/:id", auth, admin, async (req, res) => {
   try {
     const user = await User.findByIdAndRemove(req.params.id);
     if (!user) {
@@ -54,7 +57,7 @@ router.delete("/users/:id", admin, async (req, res) => {
 });
 
 // get all events
-router.get("/events", admin, async () => {
+router.get("/events", auth, admin, async (req, res) => {
   try {
     const events = await Event.find().sort("-createdAt");
 

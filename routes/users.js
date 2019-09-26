@@ -97,6 +97,11 @@ router.get("/me", auth, async (req, res) => {
 
     const allUsers = await User.find().sort("-name");
 
+    if (!req.user) {
+      req.flash("danger", "Please login");
+      req.status(404).render("not-found", { error: "Please login" });
+    }
+
     res.status(200).render("user", { user: req.user, events, allUsers });
   } catch (err) {
     req.flash("danger", `${err.message}`);

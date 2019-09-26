@@ -1,24 +1,10 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-
 async function admin(req, res, next) {
   try {
-    const token = req.header("Authorization").replace("Bearer ", "");
-    const decoded = await jwt.verify(token, process.env.JWT_PRIVATE_KEY);
-
-    const user = await User.findOne({
-      _id: decoded._id,
-      isAdmin: decoded.isAdmin,
-      "tokens.token": token
-    });
-    if (!user) throw new Error();
-
-    req.token = token;
-    req.user = user;
+    if (!req.user.isAdmin) throw new Error("Unauthorized Access");
 
     next();
   } catch (err) {
-    res.status(403).send("user Not Authorized.");
+    req.flash("danger", `${err.message}`);
   }
 }
 
