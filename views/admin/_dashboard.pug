@@ -1,0 +1,34 @@
+.row
+  .col-md-3.account-settings.text-default
+    .card
+      .card-body
+        ul.nav.p-3.flex-column(role='tablist')
+          li.nav-item
+            a.nav-link.active(data-toggle='tab', href='#profile', role='tablist')
+              i.fas.fa-user.text-default.mr-3
+              |  My profile
+          hr.line-tertiary
+          li.nav-item
+            a.nav-link(data-toggle='tab', href='#users', role='tablist')
+              i.fas.fa-users.text-default.mr-3
+              |  Users
+          hr.line-tertiary
+          li.nav-item
+            a.nav-link(data-toggle='tab', href='#events', role='tablist')
+              i.fas.fa-clipboard-list.text-default.mr-3
+              | Events
+          hr.line-tertiary
+          li.nav-item
+            a.nav-link(data-toggle='tab', href='#settings', role='tablist')
+              i.fas.fa-cogs.text-default.mr-3
+              |  Settings
+  .col-md-9.ml-auto.account-settings
+    .tab-content
+      #profile.tab-pane.active
+        include _profile
+      #users.tab-pane
+        include _users                        
+      #events.tab-pane
+        include _events
+      #settings.tab-pane
+        include _settings

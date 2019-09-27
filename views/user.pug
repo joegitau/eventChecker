@@ -2,44 +2,35 @@ extend base
 block content
   .section
     .container
-      .row.align-items-center.py-4
-        .col-lg-6.col-7
-          nav.d-none.d-md-inline-block.ml-md-4(aria-label='breadcrumb')
-            ol.breadcrumb.breadcrumb-links.breadcrumb-dark
-              li.breadcrumb-item
-                a(href='/')
-                  i.fas.fa-home
-              li.breadcrumb-item.active(aria-current='page') Profile
-          h2.title.d-inline-block.mb-0.ml-3.mt-0= `Hello, ${user.name.split(' ')[0]}`
-        .col-lg-6.col-5.text-right
-          a.btn.btn-sm.btn-default(href='/users/me/new-event') Create Event
-      .row
-        .col-lg-8
-          if user.isAdmin
-            .nav.nav-tabs.nav-tabs-primary.btn-group(role='tablist')
-              a.btn.btn-sm.btn-info.btn-simple.active(data-toggle='tab', href='#all_users', role='tablist')            
-                | All Users
-              a.btn.btn-sm.btn-info.btn-simple(data-toggle='tab', href='#gen_info', role='tablist')
-                | Edit Profile             
-            .tab-content.tab-space
-              #all_users.tab-pane.active
-                include admin/_users
-              #gen_info.tab-pane
-                include admin/_profile              
-          else
-            .nav.nav-tabs.nav-tabs-primary.btn-group(role='tablist')
-              a.btn.btn-sm.btn-info.btn-simple.active(data-toggle='tab', href='#my_events', role='tablist')            
-                | My Events
-              a.btn.btn-sm.btn-info.btn-simple(data-toggle='tab', href='#gen_info', role='tablist')
-                | Edit Profile              
-            .tab-content.tab-space
-              #my_events.tab-pane.active
-                include user/_events 
-              #gen_info.tab-pane
-                include user/_profile                                  
-        .col-lg-4
-          include user/_card
-          br
-          form.form.text-center.mx-auto(method='POST' action=`/users/me?_method=DELETE`)
-            button.btn.btn-simple.btn-lg(type='submit') Delete Profile
+      if user.isAdmin
+        include admin/_dashboard
+      else
+        .row.align-items-center.py-4
+          .col-lg-6.col-7
+            nav.d-none.d-md-inline-block.ml-md-4(aria-label='breadcrumb')
+              ol.breadcrumb.breadcrumb-links.breadcrumb-dark
+                li.breadcrumb-item
+                  a(href='/')
+                    i.fas.fa-home
+                li.breadcrumb-item.active(aria-current='page') Profile
+            h2.title.d-inline-block.mb-0.ml-3.mt-0= `Hello, ${user.name.split(' ')[0]}`
+          .col-lg-6.col-5.text-right
+            a.btn.btn-sm.btn-default(href='/users/me/new-event') Create Event
+        .row
+          .col-lg-8
+              .nav.nav-tabs.nav-tabs-primary.btn-group(role='tablist')
+                a.btn.btn-sm.btn-info.btn-simple.active(data-toggle='tab', href='#my_events', role='tablist')            
+                  | My Events
+                a.btn.btn-sm.btn-info.btn-simple(data-toggle='tab', href='#gen_info', role='tablist')
+                  | Edit Profile              
+              .tab-content.tab-space
+                #my_events.tab-pane.active
+                  include user/_events 
+                #gen_info.tab-pane
+                  include user/_profile                                  
+          .col-lg-4
+            include user/_card
+            br
+            form.form.text-center.mx-auto(method='POST' action=`/users/me?_method=DELETE`)
+              button.btn.btn-simple.btn-lg(type='submit') Delete Profile
 

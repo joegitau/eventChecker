@@ -37,7 +37,7 @@ router.post("/", auth, async function(req, res) {
 
     await guest.save();
 
-    req.flash("primary", "Guest successfully added.");
+    req.flash("success", "Guest successfully added.");
     res.status(201).redirect("/events");
   } catch (err) {
     console.log(err.message);

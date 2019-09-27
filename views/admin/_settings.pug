@@ -1,0 +1,29 @@
+.card.p-3
+  .card-body
+    header
+      .row
+        .col-md-12
+          h2.text-default Frontend Settings
+    hr.line-primary
+    form.form(method='POST' action='/5d8def598b8f5603501e4b07?_method=PUT')
+      .container
+        h3.profile-title.text-left.text-default Homepage
+        each home in homeContent
+          .row
+            .col-md-12
+              textarea.form-control(name='content', id='editHome' rows='4')= home.content
+        br
+        .d-flex.justify-content-between.align-items-center
+          button.btn.btn-primary.btn-md(type='submit') Update content
+.card.p-3
+  .card-body
+    form.form(method='POST' action='/5d8dfee3486008f06aa12c7a?_method=PUT')
+      .container
+        h3.profile-title.text-left.text-default About us
+        each about in aboutContent
+          .row
+            .col-md-12
+              textarea.form-control(name='content', id='editAbout' rows='4')= about.content
+        br
+        .d-flex.justify-content-between.align-items-center
+          button.btn.btn-primary.btn-md(type='submit') Update content

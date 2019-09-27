@@ -1,8 +1,14 @@
-.card
+.card.p-3
   .card-body
-    h3.profile-title.text-left All Users
+    header
+      .row
+        .col-md-6
+          h2.text-default All Users
+        .col-md-6
+          a.text-primary.pull-right.btn.btn-sm.btn-simple(href='/admin/users') Expanded View              
+    hr.line-primary
     .table-responsive
-      table#usersDataTable.table.table-hover.table-striped.dataTable.dtr-inline
+      table#usersDataTable.table.table-hover.table-striped.dataTable.dtr-inline(style='width: 100%')
         thead.text-primary
           tr
             //- th.text-center
@@ -26,7 +32,7 @@
             tr.text-primary
               //- td.text-center= user._id
               td.text-center
-                a(href='')= user.name
+                a(href='javascript:;')= user.name
               td.text-center
                 .photo
                   img(src=`/img/users/${user.avatar}` alt=`${user.name}`)
@@ -38,7 +44,8 @@
               else
                 td.text-center User
               td.text-right
-                a(href=`/users/${user._id}`)
+                a(href=`/admin/users/${user._id}` rel='tooltip' data-original-title='view user')
                   i.fas.fa-eye
-                button.btn.btn-link.btn-sm(type='button' rel='tooltip' data-original-title='Delete user' onclick='deleteUser(this)')
-                  i.fas.fa-trash
+                form.form(method='POST' action=`/admin/users/${user._id}?_method=DELETE`)
+                  button.btn.btn-link.btn-plain.btn-sm.btn-icon(type='submit' rel='tooltip' data-original-title='Delete user')
+                    i.fas.fa-trash

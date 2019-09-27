@@ -1,7 +1,7 @@
 {
   "name": "eventstag",
   "version": "1.0.0",
-  "description": "A simple application to checkin guests at an event while subsequently tagging them as they arrive.",
+  "description": "An integrated solution to help Event hosts easily Checkin guests and Tag them as they arrive",
   "main": "index.js",
   "jest": {
     "testEnvironment": "node"
@@ -19,7 +19,6 @@
     "@hapi/joi-date": "^1.3.0",
     "@sendgrid/mail": "^6.4.0",
     "bcrypt": "^3.0.6",
-    "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.4",
     "express": "^4.17.1",

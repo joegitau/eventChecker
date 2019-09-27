@@ -11,11 +11,9 @@ router.get("/users", auth, admin, async (req, res) => {
   try {
     const users = await User.find().sort("-name");
     if (!users) {
-      res
-        .status(403)
-        .render("404", {
-          error: "Cannot access page. Page authorized for ADMINS only"
-        });
+      res.status(403).render("404", {
+        error: "Cannot access page. Page authorized for ADMINS only"
+      });
     }
 
     res.status(200).render("users", { users });
@@ -48,7 +46,7 @@ router.delete("/users/:id", auth, admin, async (req, res) => {
         .render("not-found", { error: "User with given ID cannot be found" });
     }
 
-    req.flash("primary", "User profile successfully deleted");
+    req.flash("success", "User profile successfully deleted");
     res.status(200).redirect("back");
   } catch (err) {
     req.flash("danger", `${err.message}`);

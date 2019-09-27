@@ -8,9 +8,9 @@ block content
           .col-md-5.col-sm-12-px-0.ml-auto.mr-auto
             .logo
               .logo-image
-                img(src='/img/creative-tim-white-slim2.png')
-            h2.title.text-left.text-white
-              | An INSTANT solution to help you swiftly CHECKIN GUESTS at your events and subsequently, TAG them as they arrive.
+                img(src='/img/eventstag-logo.png')
+            each item in content
+              h2.title.text-left.text-white= item.content
             a.mt-3.btn.btn-neutral.btn-plain(href='/register')
               i.fas.fa-file-signature.mr-3
               |  Start Managing your Events         

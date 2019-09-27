@@ -37,6 +37,7 @@ router.post("/", auth, async (req, res) => {
   };
 
   const { error } = Joi.validate(req.body, schema);
+  console.log(error);
   if (error) return req.flash("danger", `${error.details[0].message}`);
 
   try {
@@ -47,7 +48,7 @@ router.post("/", auth, async (req, res) => {
 
     await event.save();
 
-    req.flash("primary", "Event successfully added.");
+    req.flash("success", "Event successfully added.");
     res.status(201).redirect("/events");
   } catch (err) {
     req.flash("danger", `${err.message}`);
@@ -92,7 +93,7 @@ router.get("/:id", auth, async (req, res) => {
     res.status(200).render("event", { event, guests });
   } catch (err) {
     req.flash("danger", `${err.message}`);
-    res.status(401).render("not-foun", { error: err.message });
+    res.status(401).render("not-found", { error: err.message });
   }
 });
 
@@ -148,7 +149,7 @@ router.put("/:id/guest/:guestId", auth, async (req, res) => {
       { new: true }
     );
 
-    req.flash("primary", "Guest successfully updated.");
+    req.flash("success", "Guest successfully updated.");
     res.status(200).redirect("back");
   } catch (err) {
     req.flash("danger", `${err.message}`);
@@ -171,7 +172,7 @@ router.delete("/:id/guest/:guestId", auth, async (req, res) => {
       return res.status(401).redirect("back");
     }
 
-    req.flash("primary", "Guest successfully deleted.");
+    req.flash("success", "Guest successfully deleted.");
     res.status(200).redirect("back");
   } catch (err) {
     req.flash("danger", `${err.message}`);
@@ -236,7 +237,7 @@ router.post(
 
       await req.event.save();
 
-      req.flash("primary", "Event Cover Image added.");
+      req.flash("success", "Event Cover Image added.");
       res.status(201).redirect("back");
     } catch (err) {
       req.flash("danger", `${err.message}`);
@@ -270,7 +271,7 @@ router.delete("/:id/coverImg", async (req, res) => {
     req.event.coverImg = undefined;
     await req.event.save();
 
-    req.flash("primary", "Event Cover image deleted.");
+    req.flash("success", "Event Cover image deleted.");
     res.status(200).redirect("/events");
   } catch (err) {
     req.flash("danger", `${err.message}`);
@@ -300,7 +301,7 @@ router.put("/:id", auth, async (req, res) => {
       { new: true }
     );
 
-    req.flash("primary", "Event successfully updated.");
+    req.flash("success", "Event successfully updated.");
     res.status(201).redirect("back");
   } catch (err) {
     req.flash("danger", `${err.message}`);
@@ -321,8 +322,8 @@ router.delete("/:id", auth, async (req, res) => {
       return res.status(401).redirect("back");
     }
 
-    req.flash("primary", "Event successfully deleted.");
-    res.status(200).redirect("/events");
+    req.flash("success", "Event successfully deleted.");
+    res.status(200).redirect("back");
   } catch (err) {
     req.flash("danger", `${err.message}`);
     res.status(401).redirect("back");

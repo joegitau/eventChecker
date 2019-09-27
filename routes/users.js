@@ -9,6 +9,8 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const User = require("../models/User");
 const Event = require("../models/Event");
+const Home = require("../models/Home");
+const About = require("../models/About");
 
 const { sendWelcomeEmail, sendDeleteEmail } = require("../emails/account");
 
@@ -44,7 +46,7 @@ router.post("/register", async (req, res) => {
 
     const token = await user.generateAuthToken();
 
-    req.flash("primary", "User profile successfully created. Please Login.");
+    req.flash("success", "User profile successfully created. Please Login.");
     res.status(201).redirect("/login");
   } catch (err) {
     req.flash("danger", `${err.message}`);
@@ -95,14 +97,28 @@ router.get("/me", auth, async (req, res) => {
   try {
     const events = await Event.find({ creator: req.user._id });
 
+    const allEvents = await Event.find().sort("-createdAt");
+
     const allUsers = await User.find().sort("-name");
+
+    const homeContent = await Home.find();
+    const aboutContent = await About.find();
 
     if (!req.user) {
       req.flash("danger", "Please login");
       req.status(404).render("not-found", { error: "Please login" });
     }
 
-    res.status(200).render("user", { user: req.user, events, allUsers });
+    res
+      .status(200)
+      .render("user", {
+        user: req.user,
+        events,
+        allUsers,
+        allEvents,
+        homeContent,
+        aboutContent
+      });
   } catch (err) {
     req.flash("danger", `${err.message}`);
     res.status(401).render("not-found", { error: err.message });
@@ -154,7 +170,7 @@ router.post(
 
       await req.user.save();
 
-      req.flash("primary", "Profile image successfully added.");
+      req.flash("success", "Profile image successfully added.");
       res.status(201).redirect("/users/me");
     } catch (err) {
       req.flash("danger", `${err.message}`);
@@ -193,7 +209,7 @@ router.delete("/me/avatar", auth, async (req, res) => {
     req.user.avatar = undefined;
     await req.user.save();
 
-    req.flash("primary", "Profile image successfully deleted");
+    req.flash("success", "Profile image successfully deleted");
     res.status(200).redirect("back");
   } catch (err) {
     req.flash("danger", `${err.message}`);
@@ -222,7 +238,7 @@ router.put("/me", auth, async (req, res) => {
     });
     await user.save();
 
-    req.flash("primary", "User successfully updated.");
+    req.flash("success", "User successfully updated.");
     res.status(201).redirect("back");
   } catch (err) {
     req.flash("danger", `${err.message}`);
@@ -263,7 +279,7 @@ router.delete("/me", auth, async (req, res) => {
 
     sendDeleteEmail(req.user.email, req.user.name);
 
-    req.flash("primary", "Profile successfully deleted.");
+    req.flash("success", "Profile successfully deleted.");
     res.status(200).redirect("/");
   } catch (err) {
     req.flash("danger", `${err.message}`);

@@ -1,7 +1,31 @@
-.card
+.card.p-3
   .card-body
+    header
+      h2.text-default Admin Profile
+    hr.line-primary
+    br
     .row
-      .col-md-6.col-sm-12.text-center
+      .col-md-6.align-self-center
+        .card.card-plain.mt-0.card-bordered
+          .card-header
+            .float-left
+              i.fas.fa-tag.text-default
+              p.d-inline.text-default.mr-2 Admin
+            .float-right
+              .dropdown
+                button.btn.btn-link.dropdown-toggle.btn-icon(type='button', data-toggle='dropdown', aria-expanded='false')
+                  i.fas.fa-cog.text-default
+                .dropdown-menu.dropdown-menu-right(x-placement='bottom-end')
+                  a.dropdown-item(href='javascript:;') Change Password
+                  a.dropdown-item(href='javascript:;') Delete Profile
+          .card-body.text-center.p-4
+            //- a(href='javascript:;')
+            //-   img.img-fluid.rounded-circle.shadow(src=`/img/users/${user.avatar}`, alt=`${user.name}`, style='width: 100px;')
+            h4.title.text-1-6.text-primary.my-2= user.name
+            h6.text-default.text-company= user.company
+            h6.text-default.text-company= user.email
+            h6.text-default.text-company= user.phone
+      .col-md-6.align-self-center.text-center
         form#user_add_avatar.form(method='POST' action='/users/me/avatar' enctype='multipart/form-data' )
           .fileinput.fileinput-new.text-center(data-provides='fileinput')
             .fileinput-new.thumbnail.img-circle.img-raised
@@ -11,15 +35,14 @@
               label.avatar-upload(for='avatar-upload')
                 input(type='file', name='avatar', accept='image/*', id='avatar-upload')
           button.btn.btn-primary.btn-sm(type='submit') Update avatar
-      .col-md-6.col-sm-12.text-center
-        h4.title Update password
     br
-    hr.border-default
+.card
+  .card-body
     .row
       .col-md-12
         form#userForm_update.js-validate(method='POST' action='/users/me?_method=PUT')
           .container
-            h3.profile-title.text-left.text-default Admin Info
+            h3.profile-title.text-left.text-default General Info
             .row
               .col-md-6
                 label.labels
@@ -31,8 +54,7 @@
                   label.labels
                     | Email address
                     span.text-danger *
-                  input#email.form-control(type='email', name='email', value=`${user.email}`)        
-            br
+                  input#email.form-control(type='email', name='email', value=`${user.email}`)  
             .row
               .col-md-6
                 label.labels
@@ -42,16 +64,10 @@
                 label.labels
                   | Phone
                 input#phone.form-control(type='text', name='phone', value=`${user.phone}`)
-            br
             .row
               .col-md-12
                 label.labels
                   | Address
                 input#address.form-control(type='text', name='address', value=`${user.address}`)
-              //- .col-md-4
-              //-   label.labels
-              //-     | Postal code
-              //-   input#postcode.form-control(type='text', name='postcode', placeholder='00670')
-            br
             .d-flex.justify-content-between.align-items-center
               button.btn.btn-primary.btn-md(type='submit') Update profile

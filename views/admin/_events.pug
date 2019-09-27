@@ -1,8 +1,14 @@
-.card
+.card.p-3
   .card-body
-    h3.profile-title.text-left All Events
+    header
+      .row
+        .col-md-6
+          h2.text-default All Events
+        .col-md-6
+          a.text-primary.pull-right.btn.btn-sm.btn-simple(href='/admin/events') Expanded View
+    hr.line-primary
     .table-responsive
-      table#eventsDataTable.table.table-hover.table-striped.dataTable.dtr-inline
+      table#eventsDataTable.table.table-hover.table-striped.dataTable.dtr-inline(style='width: 100%')
         thead.text-primary
           tr
             th.text-center
@@ -20,7 +26,7 @@
             th.text-right
               | Action
         tbody
-          each event in events
+          each event in allEvents
             tr.text-primary
               td.text-center
                 .photo
@@ -32,7 +38,7 @@
               td.text-center= event.eventTime
               td.text-center= event.duration
               td.text-right
-                a(href=`/event/${event._id}`).btn.btn-link.btn-sm.mr-2(type='button' rel='tooltip' data-original-title='View event')
+                a.mr-2(href=`/events/${event._id}` rel='tooltip' data-original-title='View event')
                   i.fas.fa-eye
                 form.form(method='POST' action=`/events/${event._id}?_method=DELETE`)
                   button.btn.btn-link.btn-plain.btn-sm.btn-icon(type='submit' rel='tooltip' data-original-title='Delete event')
