@@ -37,7 +37,7 @@ router.post("/", auth, async (req, res) => {
   };
 
   const { error } = Joi.validate(req.body, schema);
-  console.log(error);
+
   if (error) return req.flash("danger", `${error.details[0].message}`);
 
   try {
@@ -101,7 +101,7 @@ router.get("/:id", auth, async (req, res) => {
 router.get("/:id/new-guest", auth, async (req, res) => {
   try {
     const events = await Event.find({ creator: req.user._id }).sort(
-      "-createdAt"
+      "createdAt"
     );
 
     const event = await Event.findOne({ _id: req.params.id });
