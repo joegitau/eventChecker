@@ -21,32 +21,34 @@ block content
                   .input-group-prepend
                     .input-group-text
                       i.fas.fa-user
-                  input#register_name.form-control(type='text' name='name' placeholder='Full Name')
+                  input#register_name.form-control(type='text' name='name' placeholder='Full Name * ')
                 .input-group
                   .input-group-prepend
                     .input-group-text
                       i.fas.fa-envelope
-                  input#register_email.form-control(type='email' name='email' placeholder='Email')
+                  input#register_email.form-control(type='email' name='email' placeholder='Email *')
                 .input-group
                   .input-group-prepend
                     .input-group-text
                       i.fas.fa-lock
-                  input#register_password.form-control(type='password' name='password' placeholder='Password')
+                  input#register_password.form-control(type='password' name='password' placeholder='Password *')
                 .input-group
                   .input-group-prepend
                     .input-group-text
                       i.fas.fa-phone
-                  input#register_phone.form-control(type='text' name='phone' placeholder='Phone')
+                  input#register_phone.form-control(type='text' name='phone' placeholder='Phone *')
                 .input-group
                   .input-group-prepend
                     .input-group-text
                       i.fas.fa-map-marker-alt
-                  input#register_address.form-control(type='text' name='address' placeholder='Address')
+                  input#register_address.form-control(type='text' name='address' placeholder='Address *')
                 .input-group
                   .input-group-prepend
                     .input-group-text
                       i.fas.fa-building
-                  input#register_company.form-control(type='text' name='company' placeholder='Company')
+                  input#register_company.form-control(type='text' name='company' placeholder='Company *')
+                br
+                p.text-danger * all fields are required
                 br
                 button.btn.btn-primary.btn-lg(type='submit') Register
               
